@@ -24,6 +24,8 @@ interface AccessibilityContextType {
   profileName: string;
   pwdType: string;
   updateProfile: (name: string, type: string) => void;
+  sidebarCollapsed: boolean;
+  toggleSidebar: () => void;
 }
 
 const defaultSettings: AccessibilitySettings = {
@@ -41,6 +43,7 @@ export function AccessibilityProvider({ children }: { children: React.ReactNode 
   const [settings, setSettings] = useState<AccessibilitySettings>(defaultSettings);
   const [profileName, setProfileName] = useState('Candidate');
   const [pwdType, setPwdType] = useState('none');
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mounted, setMounted] = useState(false);
 
   // Load preferences from localStorage on mount
@@ -166,6 +169,10 @@ export function AccessibilityProvider({ children }: { children: React.ReactNode 
     }
   };
 
+  const toggleSidebar = () => {
+    setSidebarCollapsed((prev) => !prev);
+  };
+
   return (
     <AccessibilityContext.Provider
       value={{
@@ -175,6 +182,8 @@ export function AccessibilityProvider({ children }: { children: React.ReactNode 
         profileName,
         pwdType,
         updateProfile,
+        sidebarCollapsed,
+        toggleSidebar,
       }}
     >
       {children}

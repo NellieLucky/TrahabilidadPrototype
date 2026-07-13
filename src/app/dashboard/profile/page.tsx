@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { User, ShieldCheck, Mail, Briefcase, FileUp, Sparkles } from 'lucide-react';
+import { User, ShieldCheck, Mail, Briefcase, FileUp, Sparkles, FileText, CheckCircle, Trash2, Loader2 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Select } from '@/components/ui/select';
@@ -12,7 +12,6 @@ import { useAccessibility } from '@/components/accessibility/settings-provider';
 interface ProfileData {
   name: string;
   email: string;
-  title: string;
   bio: string;
   pwdType: string;
   preferredInterview: string;
@@ -25,7 +24,6 @@ interface ProfileData {
 const defaultProfile: ProfileData = {
   name: 'Joshua Santos',
   email: 'joshua.santos@example.com',
-  title: 'Junior Accessibility Engineer',
   bio: 'A passionate developer focusing on building inclusive interfaces and validating WCAG standards. Seeking to contribute to accessible designs.',
   pwdType: 'visual',
   preferredInterview: 'remote',
@@ -40,6 +38,43 @@ export default function ProfilePage() {
   const { updateProfile } = useAccessibility();
   const [profile, setProfile] = useState<ProfileData>(defaultProfile);
   const [submitting, setSubmitting] = useState(false);
+  const [uploadedFile, setUploadedFile] = useState<{ name: string; size: string } | null>(null);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [isUploading, setIsUploading] = useState(false);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 5 * 1024 * 1024) {
+      toast('File size exceeds the 5MB limit.', 'error');
+      return;
+    }
+
+    setIsUploading(true);
+    setUploadProgress(0);
+
+    let progress = 0;
+    const interval = setInterval(() => {
+      progress += 20;
+      setUploadProgress(progress);
+      if (progress >= 100) {
+        clearInterval(interval);
+        setIsUploading(false);
+        setUploadedFile({
+          name: file.name,
+          size: (file.size / (1024 * 1024)).toFixed(2) + ' MB'
+        });
+        toast(`Successfully uploaded "${file.name}"`, 'success');
+      }
+    }, 150);
+  };
+
+  const handleRemoveFile = () => {
+    setUploadedFile(null);
+    setUploadProgress(0);
+    toast('Resume removed', 'info');
+  };
 
   useEffect(() => {
     // Load existing profile from storage or fallback to default
@@ -130,20 +165,13 @@ export default function ProfilePage() {
                 required
               />
               <Input
-                label="Email Address"
-                type="email"
+                label="Email or Phone Number"
+                type="text"
                 value={profile.email}
                 onChange={(e) => setProfile({ ...profile, email: e.target.value })}
                 required
               />
             </div>
-
-            <Input
-              label="Professional Headline"
-              placeholder="e.g. Junior Web Designer / Admin Associate"
-              value={profile.title}
-              onChange={(e) => setProfile({ ...profile, title: e.target.value })}
-            />
 
             <div className="flex flex-col gap-1.5">
               <label htmlFor="bio-textarea" className="text-sm font-semibold text-foreground-color">
@@ -160,15 +188,66 @@ export default function ProfilePage() {
             </div>
 
             {/* Resume Upload mock */}
-            <div className="border border-dashed border-border-color rounded-xl p-6 text-center space-y-3 bg-surface">
-              <FileUp className="w-8 h-8 text-gray-400 mx-auto" aria-hidden="true" />
-              <div>
-                <span className="text-sm font-bold text-foreground-color block">Upload Professional Resume</span>
-                <span className="text-xs text-gray-500">Supports PDF, DOCX up to 5MB (Accessible formats preferred)</span>
-              </div>
-              <Button type="button" variant="outline" size="sm" className="h-9 px-4 font-bold border-gray-300">
-                Choose File
-              </Button>
+            <div className="border border-dashed border-border-color rounded-xl p-6 text-center space-y-3 bg-surface relative">
+              <input
+                type="file"
+                id="resume-file-input"
+                accept=".pdf,.docx,.png,.jpg,.jpeg"
+                onChange={handleFileChange}
+                className="hidden"
+              />
+              
+              {isUploading ? (
+                <div className="space-y-3 py-2">
+                  <Loader2 className="w-8 h-8 text-primary mx-auto animate-spin" aria-hidden="true" />
+                  <div className="space-y-1">
+                    <span className="text-sm font-bold text-foreground-color block">Uploading your document...</span>
+                    <div className="w-48 bg-gray-200 rounded-full h-1.5 mx-auto overflow-hidden">
+                      <div className="bg-primary h-1.5 transition-all duration-150" style={{ width: `${uploadProgress}%` }} />
+                    </div>
+                  </div>
+                </div>
+              ) : uploadedFile ? (
+                <div className="flex items-center justify-between p-3 bg-white border border-gray-100 rounded-xl shadow-sm">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="w-10 h-10 rounded-lg bg-emerald-50 flex items-center justify-center text-emerald-600 shrink-0">
+                      <FileText className="w-5 h-5" />
+                    </div>
+                    <div className="text-left min-w-0">
+                      <span className="text-sm font-bold text-gray-900 block truncate">{uploadedFile.name}</span>
+                      <span className="text-[10px] text-gray-500 font-semibold">{uploadedFile.size} · Uploaded</span>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <CheckCircle className="w-5 h-5 text-emerald-500 shrink-0" />
+                    <button
+                      type="button"
+                      onClick={handleRemoveFile}
+                      className="p-1.5 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 transition-colors cursor-pointer"
+                      title="Remove file"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <FileUp className="w-8 h-8 text-gray-400 mx-auto" aria-hidden="true" />
+                  <div>
+                    <span className="text-sm font-bold text-foreground-color block">Upload Professional Resume</span>
+                    <span className="text-xs text-gray-500">Supports PDF, DOCX, PNG, JPG, or JPEG up to 5MB (Accessible formats preferred)</span>
+                  </div>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => document.getElementById('resume-file-input')?.click()}
+                    className="h-9 px-4 font-bold border-gray-300 cursor-pointer"
+                  >
+                    Choose File
+                  </Button>
+                </>
+              )}
             </div>
           </section>
         </div>

@@ -44,7 +44,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
       {children}
       {/* Toast Portal Container */}
       <div
-        className="fixed top-5 right-5 z-50 flex flex-col gap-2 max-w-md w-full sm:w-auto"
+        className="fixed top-5 left-5 right-5 sm:left-auto sm:right-5 z-50 flex flex-col gap-2 max-w-md sm:w-auto"
         aria-live="polite"
         role="status"
       >

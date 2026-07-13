@@ -29,7 +29,7 @@ import { cn } from '@/lib/utils';
 
 export function Navbar() {
   const pathname = usePathname();
-  const { settings, updateSetting } = useAccessibility();
+  const { settings, updateSetting, toggleSidebar } = useAccessibility();
   const { toast } = useToast();
   const [showQuickSettings, setShowQuickSettings] = useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -145,11 +145,13 @@ export function Navbar() {
           
           <div className="flex-1 flex flex-col items-center justify-center text-center select-none px-2">
             <div className="flex items-center gap-1.5">
-              <div className="w-6 h-6 rounded-md bg-primary flex items-center justify-center text-[#212121]">
+              <div className="w-6 h-6 rounded-md bg-primary brand-logo-bg flex items-center justify-center text-[#212121]">
                 <Accessibility className="w-4 h-4" />
               </div>
-              <span className="text-base font-extrabold tracking-tight text-foreground-color">
-                Trah<span className="text-primary">Abilidad</span>
+              <span className="text-base font-extrabold tracking-tight text-foreground-color" aria-label="Trahabilidad">
+                <span aria-hidden="true">
+                  Trah<span className="text-primary brand-text-highlight">Abilidad</span>
+                </span>
               </span>
             </div>
             <span className="text-[7.5px] text-gray-400 font-extrabold tracking-wider mt-0.5">
@@ -163,7 +165,7 @@ export function Navbar() {
             className="relative p-2 rounded-lg border border-border-color hover:bg-surface text-gray-500 hover:text-foreground-color focus-visible:ring-4 focus-visible:ring-primary/50 focus-visible:outline-none shrink-0"
           >
             <Bell className="w-5 h-5" aria-hidden="true" />
-            <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#F4B400]" />
+            <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#F4B400] notification-dot" />
           </Link>
         </div>
 
@@ -172,9 +174,8 @@ export function Navbar() {
           <div className="flex items-center gap-3">
             <button
               type="button"
-              onClick={() => setIsDrawerOpen(true)}
-              aria-expanded={isDrawerOpen}
-              aria-label="Open navigation menu"
+              onClick={toggleSidebar}
+              aria-label="Toggle navigation menu"
               className="p-2 rounded-lg border border-border-color hover:bg-surface text-gray-500 hover:text-foreground-color focus-visible:ring-4 focus-visible:ring-primary/50 focus-visible:outline-none cursor-pointer"
             >
               <Menu className="w-5 h-5" aria-hidden="true" />
@@ -282,7 +283,7 @@ export function Navbar() {
               className="relative p-2 rounded-lg border border-border-color hover:bg-surface text-gray-500 hover:text-foreground-color transition-all focus-visible:ring-4 focus-visible:ring-primary/50 focus-visible:outline-none cursor-pointer"
             >
               <Bell className="w-4 h-4" aria-hidden="true" />
-              <span className="absolute top-1 right-1 w-2.5 h-2.5 rounded-full bg-red-500 ring-2 ring-background-color" />
+              <span className="absolute top-1 right-1 w-2.5 h-2.5 rounded-full bg-red-500 ring-2 ring-background-color notification-dot" />
             </Link>
           </div>
         </div>
@@ -315,11 +316,13 @@ export function Navbar() {
               {/* Header inside Drawer */}
               <div className="flex items-center justify-between pb-4 border-b border-border-color mb-4">
                 <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-[#212121]">
+                  <div className="w-8 h-8 rounded-lg bg-primary brand-logo-bg flex items-center justify-center text-[#212121]">
                     <Accessibility className="w-5 h-5" />
                   </div>
-                  <span className="text-lg font-extrabold tracking-tight text-foreground-color">
-                    Trah<span className="text-primary">Abilidad</span>
+                  <span className="text-lg font-extrabold tracking-tight text-foreground-color" aria-label="Trahabilidad">
+                    <span aria-hidden="true">
+                      Trah<span className="text-primary brand-text-highlight">Abilidad</span>
+                    </span>
                   </span>
                 </div>
                 <button

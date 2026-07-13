@@ -37,7 +37,6 @@ export default function DashboardHome() {
 
   // Search and filter states (Mobile view)
   const [searchQuery, setSearchQuery] = useState('');
-  const [locationQuery, setLocationQuery] = useState('');
   const [activeQuickFilters, setActiveQuickFilters] = useState<string[]>([]);
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
   const [selectedAccFilters, setSelectedAccFilters] = useState<string[]>([]);
@@ -195,20 +194,14 @@ export default function DashboardHome() {
       });
     }
 
-    // Filter based on keywords query
+    // Filter based on keywords and location query
     if (searchQuery !== '') {
       list = list.filter((job) =>
         job.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         job.company.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        job.description.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-    }
-
-    // Filter based on location search query
-    if (locationQuery !== '') {
-      list = list.filter((job) =>
-        job.location.toLowerCase().includes(locationQuery.toLowerCase()) ||
-        (locationQuery.toLowerCase() === 'remote' && job.remote)
+        job.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        job.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (searchQuery.toLowerCase() === 'remote' && job.remote)
       );
     }
 
@@ -258,7 +251,7 @@ export default function DashboardHome() {
     }
 
     return list;
-  }, [pwdType, searchQuery, locationQuery, activeQuickFilters, appliedAccFilters]);
+  }, [pwdType, searchQuery, activeQuickFilters, appliedAccFilters]);
 
   // Lock scroll when mobile bottom sheet is active
   useEffect(() => {
@@ -280,43 +273,16 @@ export default function DashboardHome() {
       {/* -------------------------------------------------- */}
       <div className="block md:hidden space-y-5">
         <section aria-label="Search parameters" className="space-y-3.5">
-          <div className="flex flex-col gap-2.5">
-            {/* Keyword Search */}
-            <div className="relative">
-              <Input
-                placeholder="Search jobs, companies, or skills..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 h-11 rounded-xl border border-gray-200 bg-background-color text-sm text-foreground-color focus:border-primary"
-                aria-label="Search keyword"
-              />
-              <div className="absolute left-3.5 top-3.5 text-gray-400">
-                <Search className="w-4 h-4" aria-hidden="true" />
-              </div>
-            </div>
-
-            {/* Location Search with GPS Target indicator */}
-            <div className="relative">
-              <Input
-                placeholder="Quezon City, Metro Manila"
-                value={locationQuery}
-                onChange={(e) => setLocationQuery(e.target.value)}
-                className="pl-10 pr-10 h-11 rounded-xl border border-gray-200 bg-background-color text-sm text-foreground-color focus:border-primary"
-                aria-label="Search location"
-              />
-              <div className="absolute left-3.5 top-3.5 text-gray-400">
-                <MapPin className="w-4 h-4" aria-hidden="true" />
-              </div>
-              <div className="absolute right-3.5 top-3 text-gray-400 hover:text-gray-700 cursor-pointer select-none">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-4.5 h-4.5">
-                  <circle cx="12" cy="12" r="10"></circle>
-                  <circle cx="12" cy="12" r="3"></circle>
-                  <line x1="12" y1="1" x2="12" y2="3"></line>
-                  <line x1="12" y1="21" x2="12" y2="23"></line>
-                  <line x1="1" y1="12" x2="3" y2="12"></line>
-                  <line x1="21" y1="12" x2="23" y2="12"></line>
-                </svg>
-              </div>
+          <div className="relative">
+            <Input
+              placeholder="Search jobs, companies, locations, or skills..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10 h-11 rounded-xl border border-gray-200 bg-background-color text-sm text-foreground-color focus:border-primary w-full"
+              aria-label="Search jobs, companies, locations, or skills"
+            />
+            <div className="absolute left-3.5 top-3.5 text-gray-400">
+              <Search className="w-4 h-4" aria-hidden="true" />
             </div>
           </div>
 
@@ -482,6 +448,75 @@ export default function DashboardHome() {
           </div>
         </section>
 
+        {/* Search & Filters (Desktop) */}
+        <section aria-label="Search and filter parameters" className="space-y-4">
+          <div className="flex flex-row gap-3 items-center">
+            {/* Unified Search Input */}
+            <div className="relative flex-1">
+              <Input
+                placeholder="Search jobs, companies, locations, or skills..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10 h-11 rounded-xl border border-gray-200 bg-background-color text-sm text-foreground-color focus:border-primary w-full"
+                aria-label="Search jobs, locations, and companies"
+              />
+              <div className="absolute left-3.5 top-3.5 text-gray-400">
+                <Search className="w-4 h-4" aria-hidden="true" />
+              </div>
+            </div>
+
+            {/* Accessibility Filters trigger */}
+            <button
+              type="button"
+              onClick={() => {
+                setSelectedAccFilters(appliedAccFilters);
+                setIsBottomSheetOpen(true);
+              }}
+              className={cn(
+                'h-11 px-4 inline-flex items-center gap-1.5 border border-gray-200 bg-background-color text-xs font-bold text-gray-700 hover:bg-surface rounded-xl shrink-0 cursor-pointer focus:outline-none',
+                appliedAccFilters.length > 0 && 'border-primary bg-primary/5 text-primary-hover'
+              )}
+            >
+              <SlidersHorizontal className="w-4 h-4" />
+              <span>Accessibility Filters</span>
+              {appliedAccFilters.length > 0 && (
+                <span className="px-1.5 py-0.5 rounded-full bg-primary text-[#212121] text-[9px] font-black">
+                  {appliedAccFilters.length}
+                </span>
+              )}
+            </button>
+          </div>
+
+          {/* Quick Filters Row */}
+          <div className="flex gap-2 items-center overflow-x-auto scrollbar-hide py-1">
+            {quickChips.map((chip) => {
+              const isSelected = activeQuickFilters.includes(chip);
+              return (
+                <button
+                  key={chip}
+                  type="button"
+                  onClick={() => handleQuickChipToggle(chip)}
+                  className={cn(
+                    'h-9 px-3.5 inline-flex items-center gap-1.5 border border-gray-200 bg-background-color text-xs font-bold text-gray-700 hover:bg-surface rounded-xl shrink-0 cursor-pointer focus:outline-none',
+                    isSelected && 'border-primary bg-primary/5 text-primary-hover'
+                  )}
+                >
+                  {chip === 'Remote' ? (
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5 shrink-0">
+                      <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                      <line x1="8" y1="21" x2="16" y2="21"></line>
+                      <line x1="12" y1="17" x2="12" y2="21"></line>
+                    </svg>
+                  ) : (
+                    <Briefcase className="w-3.5 h-3.5 shrink-0" />
+                  )}
+                  <span>{chip}</span>
+                </button>
+              );
+            })}
+          </div>
+        </section>
+
         {/* Main Grid: Recommended Listings & Guides */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Recommended list - Left 2 Columns */}
@@ -501,8 +536,8 @@ export default function DashboardHome() {
 
             {/* Desktop grid (responsive matching iPad adjustments) */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-              {profileRecommendedJobs.length > 0 ? (
-                profileRecommendedJobs.map((job) => (
+              {mobileFilteredJobs.length > 0 ? (
+                mobileFilteredJobs.map((job) => (
                   <JobCard
                     key={job.id}
                     job={job}

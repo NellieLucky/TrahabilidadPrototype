@@ -27,7 +27,6 @@ export default function SearchPage() {
 
   // Search input state
   const [searchQuery, setSearchQuery] = useState('');
-  const [locationQuery, setLocationQuery] = useState('');
 
   // Quick filter chips state
   const [activeQuickFilters, setActiveQuickFilters] = useState<string[]>([]);
@@ -81,7 +80,6 @@ export default function SearchPage() {
 
   const handleClearAll = () => {
     setSearchQuery('');
-    setLocationQuery('');
     setActiveQuickFilters([]);
     setSelectedAccFilters([]);
     setAppliedAccFilters([]);
@@ -100,27 +98,23 @@ export default function SearchPage() {
   // Clean filter matches logic
   const filteredJobs = useMemo(() => {
     return mockJobs.filter((job) => {
-      // 1. Keyword search matches
-      const matchesKeyword =
+      // 1. Unified search query matches (keywords, company, description, location)
+      const matchesQuery =
         searchQuery === '' ||
         job.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         job.company.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        job.description.toLowerCase().includes(searchQuery.toLowerCase());
+        job.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        job.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (searchQuery.toLowerCase() === 'remote' && job.remote);
 
-      // 2. Location search matches
-      const matchesLocation =
-        locationQuery === '' ||
-        job.location.toLowerCase().includes(locationQuery.toLowerCase()) ||
-        (locationQuery.toLowerCase() === 'remote' && job.remote);
-
-      // 3. Quick chips matches
+      // 2. Quick chips matches
       const matchesQuick = activeQuickFilters.every((chip) => {
         if (chip === 'Remote') return job.remote;
         if (chip === 'Full-time') return job.type === 'Full-time';
         return true;
       });
 
-      // 4. Accessibility filters matches
+      // 3. Accessibility filters matches
       const matchesAcc = appliedAccFilters.every((filter) => {
         const badges = job.accessibilityBadges.map((b) => b.toLowerCase());
         if (filter === 'Screen Reader Compatible') {
@@ -150,9 +144,9 @@ export default function SearchPage() {
         return true;
       });
 
-      return matchesKeyword && matchesLocation && matchesQuick && matchesAcc;
+      return matchesQuery && matchesQuick && matchesAcc;
     });
-  }, [searchQuery, locationQuery, activeQuickFilters, appliedAccFilters]);
+  }, [searchQuery, activeQuickFilters, appliedAccFilters]);
 
   // Lock scrolling when bottom sheet is open
   useEffect(() => {
@@ -173,110 +167,88 @@ export default function SearchPage() {
 
   return (
     <div className="space-y-5 pb-12">
-      {/* Search fields section */}
-      <section aria-label="Search inputs" className="space-y-3.5">
-        <div className="flex flex-col gap-2.5">
-          {/* Keyword Search */}
+      {/* Sticky search + filter bar */}
+      <div className="sticky top-0 z-20 -mx-4 md:-mx-6 -mt-4 md:-mt-6 px-4 md:px-6 pt-4 md:pt-6 pb-3 bg-background-color border-b border-border-color relative">
+        {/* Cover strip — blocks cards bleeding above the sticky bar */}
+        <div className="absolute inset-x-0 bottom-full h-16 bg-background-color" />
+        {/* Search fields section */}
+        <section aria-label="Search inputs" className="space-y-3">
           <div className="relative">
             <Input
-              placeholder="Search jobs, companies, or skills..."
+              placeholder="Search jobs, companies, locations, or skills..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 h-11 rounded-xl border border-gray-200 bg-background-color text-sm text-foreground-color focus:border-primary"
-              aria-label="Search keywords"
+              className="pl-10 h-11 rounded-xl border border-gray-200 bg-background-color text-sm text-foreground-color focus:border-primary w-full"
+              aria-label="Search jobs, companies, locations, or skills"
             />
             <div className="absolute left-3.5 top-3.5 text-gray-400">
               <Search className="w-4 h-4" aria-hidden="true" />
             </div>
           </div>
 
-          {/* Location Search with GPS target */}
-          <div className="relative">
-            <Input
-              placeholder="Quezon City, Metro Manila"
-              value={locationQuery}
-              onChange={(e) => setLocationQuery(e.target.value)}
-              className="pl-10 pr-10 h-11 rounded-xl border border-gray-200 bg-background-color text-sm text-foreground-color focus:border-primary"
-              aria-label="Search location"
-            />
-            <div className="absolute left-3.5 top-3.5 text-gray-400">
-              <MapPin className="w-4 h-4" aria-hidden="true" />
-            </div>
-            <div className="absolute right-3.5 top-3 text-gray-400 hover:text-gray-700 cursor-pointer select-none">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-4.5 h-4.5">
-                <circle cx="12" cy="12" r="10"></circle>
-                <circle cx="12" cy="12" r="3"></circle>
-                <line x1="12" y1="1" x2="12" y2="3"></line>
-                <line x1="12" y1="21" x2="12" y2="23"></line>
-                <line x1="1" y1="12" x2="3" y2="12"></line>
-                <line x1="21" y1="12" x2="23" y2="12"></line>
-              </svg>
-            </div>
+          {/* Filters tray */}
+          <div className="flex gap-2 items-center overflow-x-auto scrollbar-hide py-0.5">
+            <button
+              type="button"
+              onClick={() => {
+                setSelectedAccFilters(appliedAccFilters);
+                setIsBottomSheetOpen(true);
+              }}
+              className={cn(
+                'h-9 px-3.5 inline-flex items-center gap-1.5 border border-gray-200 bg-background-color text-xs font-bold text-gray-700 hover:bg-surface rounded-xl shrink-0 cursor-pointer focus:outline-none',
+                appliedAccFilters.length > 0 && 'border-primary bg-primary/5'
+              )}
+            >
+              <SlidersHorizontal className="w-3.5 h-3.5" />
+              <span>Accessibility Filters</span>
+              {appliedAccFilters.length > 0 && (
+                <span className="px-1.5 py-0.5 rounded-full bg-primary text-[#212121] text-[9px] font-black">
+                  {appliedAccFilters.length}
+                </span>
+              )}
+            </button>
+
+            {quickChips.map((chip) => {
+              const isSelected = activeQuickFilters.includes(chip);
+              return (
+                <button
+                  key={chip}
+                  type="button"
+                  onClick={() => handleQuickChipToggle(chip)}
+                  className={cn(
+                    'h-9 px-3.5 inline-flex items-center gap-1.5 border border-gray-200 bg-background-color text-xs font-bold text-gray-700 hover:bg-surface rounded-xl shrink-0 cursor-pointer focus:outline-none',
+                    isSelected && 'border-primary bg-primary/5 text-primary-hover'
+                  )}
+                >
+                  {chip === 'Remote' ? (
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5 shrink-0">
+                      <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                      <line x1="8" y1="21" x2="16" y2="21"></line>
+                      <line x1="12" y1="17" x2="12" y2="21"></line>
+                    </svg>
+                  ) : (
+                    <Briefcase className="w-3.5 h-3.5 shrink-0" />
+                  )}
+                  <span>{chip}</span>
+                </button>
+              );
+            })}
+
+            <button
+              type="button"
+              onClick={handleClearAll}
+              className="h-9 px-3.5 inline-flex items-center justify-center border border-gray-200 bg-background-color text-xs font-bold text-gray-700 hover:bg-surface rounded-xl shrink-0 focus:outline-none"
+            >
+              Reset Filters
+            </button>
           </div>
-        </div>
-
-        {/* Filters tray */}
-        <div className="flex gap-2 items-center overflow-x-auto scrollbar-hide py-1">
-          <button
-            type="button"
-            onClick={() => {
-              setSelectedAccFilters(appliedAccFilters);
-              setIsBottomSheetOpen(true);
-            }}
-            className={cn(
-              'h-9 px-3.5 inline-flex items-center gap-1.5 border border-gray-200 bg-background-color text-xs font-bold text-gray-700 hover:bg-surface rounded-xl shrink-0 cursor-pointer focus:outline-none',
-              appliedAccFilters.length > 0 && 'border-primary bg-primary/5'
-            )}
-          >
-            <SlidersHorizontal className="w-3.5 h-3.5" />
-            <span>Accessibility Filters</span>
-            {appliedAccFilters.length > 0 && (
-              <span className="px-1.5 py-0.5 rounded-full bg-primary text-[#212121] text-[9px] font-black">
-                {appliedAccFilters.length}
-              </span>
-            )}
-          </button>
-
-          {quickChips.map((chip) => {
-            const isSelected = activeQuickFilters.includes(chip);
-            return (
-              <button
-                key={chip}
-                type="button"
-                onClick={() => handleQuickChipToggle(chip)}
-                className={cn(
-                  'h-9 px-3.5 inline-flex items-center gap-1.5 border border-gray-200 bg-background-color text-xs font-bold text-gray-700 hover:bg-surface rounded-xl shrink-0 cursor-pointer focus:outline-none',
-                  isSelected && 'border-primary bg-primary/5 text-primary-hover'
-                )}
-              >
-                {chip === 'Remote' ? (
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5 shrink-0">
-                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
-                    <line x1="8" y1="21" x2="16" y2="21"></line>
-                    <line x1="12" y1="17" x2="12" y2="21"></line>
-                  </svg>
-                ) : (
-                  <Briefcase className="w-3.5 h-3.5 shrink-0" />
-                )}
-                <span>{chip}</span>
-              </button>
-            );
-          })}
-
-          <button
-            type="button"
-            onClick={handleClearAll}
-            className="h-9 px-3.5 inline-flex items-center justify-center border border-gray-200 bg-background-color text-xs font-bold text-gray-700 hover:bg-surface rounded-xl shrink-0 focus:outline-none"
-          >
-            Reset Filters
-          </button>
-        </div>
-      </section>
+        </section>
+      </div>
 
       {/* Results header details */}
-      <div className="flex items-center justify-between text-xs md:text-sm font-bold text-gray-500">
+      <div className="flex items-center justify-between text-xs md:text-sm font-bold text-gray-500 mt-4">
         <p aria-live="polite">Showing {filteredJobs.length} Jobs</p>
-        {(searchQuery || locationQuery || activeQuickFilters.length > 0 || appliedAccFilters.length > 0) && (
+        {(searchQuery || activeQuickFilters.length > 0 || appliedAccFilters.length > 0) && (
           <button
             onClick={handleClearAll}
             className="text-xs text-primary hover:underline font-extrabold focus:outline-none"

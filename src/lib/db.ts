@@ -439,7 +439,6 @@ export function unsaveJob(id: string): string[] {
 export function getApplications(): Application[] {
   if (typeof window === 'undefined') return [];
   const stored = localStorage.getItem('trahabilidad-applications');
-  if (stored) return JSON.parse(stored);
   
   // Default applications to populate dashboard initially
   const defaultApps: Application[] = [
@@ -451,8 +450,37 @@ export function getApplications(): Application[] {
       appliedDate: '2026-07-10',
       status: 'Interviewing',
       accommodationsRequested: ['Remote Interview', 'Screen Reader Readable Docs'],
+    },
+    {
+      id: 'app-default-2',
+      jobId: 'job-1',
+      jobTitle: 'Licensed Massage Therapist (Masahista)',
+      company: 'Vibe Wellness Spa Manila',
+      appliedDate: '2026-07-12',
+      status: 'Applied',
+      accommodationsRequested: ['Assisted Forms Filling', 'Sighted guide assistance available'],
+    },
+    {
+      id: 'app-default-3',
+      jobId: 'job-3',
+      jobTitle: 'Customer Support Associate (Voice)',
+      company: 'Accenture Philippines',
+      appliedDate: '2026-07-08',
+      status: 'Screening',
+      accommodationsRequested: ['Screen Reader Friendly Specs', 'Oral Interview Format'],
     }
   ];
+
+  if (stored) {
+    const parsed = JSON.parse(stored);
+    // If user has the old single-item array, force upgrade to 3 items
+    if (parsed.length < 3) {
+      localStorage.setItem('trahabilidad-applications', JSON.stringify(defaultApps));
+      return defaultApps;
+    }
+    return parsed;
+  }
+  
   localStorage.setItem('trahabilidad-applications', JSON.stringify(defaultApps));
   return defaultApps;
 }

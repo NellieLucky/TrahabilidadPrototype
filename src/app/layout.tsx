@@ -1,13 +1,7 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
 import { AccessibilityProvider } from "@/components/accessibility/settings-provider";
 import { ToastProvider } from "@/components/ui/toast";
-
-const inter = Inter({
-  variable: "--font-inter-family",
-  subsets: ["latin"],
-});
 
 export const metadata: Metadata = {
   title: "TrahAbilidad - Accessible Job Portal for PWDs",
@@ -22,7 +16,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} h-full antialiased`}>
+    <html lang="en" className="h-full antialiased">
       <body className="min-h-full flex flex-col">
         <AccessibilityProvider>
           <ToastProvider>

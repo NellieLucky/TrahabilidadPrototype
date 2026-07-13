@@ -16,7 +16,9 @@ import {
   Eye, 
   Volume2,
   Sparkles,
-  Info
+  Info,
+  Menu,
+  X
 } from 'lucide-react';
 import { useAccessibility } from '@/components/accessibility/settings-provider';
 import { Button } from '@/components/ui/button';
@@ -27,6 +29,7 @@ export default function LandingPage() {
   const { settings, updateSetting, resetSettings } = useAccessibility();
   const { toast } = useToast();
   const [showSettings, setShowSettings] = useState(false);
+  const [showMobileNav, setShowMobileNav] = useState(false);
 
   const handleContrastToggle = () => {
     updateSetting('highContrast', !settings.highContrast);
@@ -56,20 +59,31 @@ export default function LandingPage() {
   };
 
   return (
-    <main className="min-h-screen bg-white text-gray-900 relative font-sans">
+    <main className="min-h-screen bg-white text-gray-900 relative font-sans overflow-x-clip">
       {/* Top thin purple accent bar */}
       <div className="h-1.5 w-full bg-[#6200EE]" />
 
       {/* Header Brand & Navigation */}
       <header className="sticky top-0 w-full bg-white/90 backdrop-blur-md border-b border-gray-100 z-40 transition-all">
-        <div className="max-w-7xl w-full mx-auto flex items-center justify-between px-4 py-4 md:px-8">
-          <div className="flex items-center gap-8">
-            <div className="flex items-center gap-2">
-              <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-[#212121]">
-                <Accessibility className="w-6 h-6" aria-hidden="true" />
+        <div className="max-w-7xl w-full mx-auto flex items-center justify-between px-2 py-3 sm:px-4 sm:py-4 md:px-8">
+          <div className="flex items-center gap-2 sm:gap-4 lg:gap-8">
+            {/* Hamburger Button on Left for Mobile */}
+            <button
+              onClick={() => setShowMobileNav(!showMobileNav)}
+              className="lg:hidden p-1.5 -ml-1 sm:p-2 sm:-ml-2 rounded-lg hover:bg-gray-50 text-gray-700 cursor-pointer"
+              aria-label="Toggle navigation menu"
+            >
+              {showMobileNav ? <X className="w-5 h-5 sm:w-5.5 sm:h-5.5" /> : <Menu className="w-5 h-5 sm:w-5.5 sm:h-5.5" />}
+            </button>
+
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              <div className="w-8 h-8 rounded-lg sm:w-10 sm:h-10 sm:rounded-xl bg-primary brand-logo-bg flex items-center justify-center text-[#212121] shrink-0">
+                <Accessibility className="w-5 h-5 sm:w-6 sm:h-6" aria-hidden="true" />
               </div>
-              <span className="text-xl font-extrabold tracking-tight text-foreground-color">
-                Trah<span className="text-[#F4B400]">Abilidad</span>
+              <span className="text-base sm:text-lg md:text-xl font-extrabold tracking-tight text-foreground-color whitespace-nowrap" aria-label="Trahabilidad">
+                <span aria-hidden="true">
+                  Trah<span className="text-[#F4B400] brand-text-highlight">Abilidad</span>
+                </span>
               </span>
             </div>
 
@@ -103,7 +117,7 @@ export default function LandingPage() {
           </div>
 
           {/* Action Controls & Settings */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 sm:gap-4 shrink-0">
             <div className="relative">
               <button
                 onClick={() => setShowSettings(!showSettings)}
@@ -170,19 +184,94 @@ export default function LandingPage() {
 
             <Link
               href="/login"
-              className="text-sm font-bold text-gray-700 hover:text-gray-900 transition-colors"
+              className="text-xs sm:text-sm font-bold text-gray-700 hover:text-gray-900 transition-colors whitespace-nowrap"
             >
               Sign In
             </Link>
             <Link
               href="/register"
-              className="px-5 py-2.5 text-sm font-bold bg-[#121212] hover:bg-[#2c2c2c] text-white rounded-full transition-all shadow-sm cursor-pointer"
+              className="px-3 py-1.5 sm:px-5 sm:py-2.5 text-xs sm:text-sm font-bold bg-[#121212] hover:bg-[#2c2c2c] text-white rounded-full transition-all shadow-sm cursor-pointer whitespace-nowrap"
             >
               Register
             </Link>
           </div>
         </div>
       </header>
+
+      {/* Mobile Navigation Dropdown Bar */}
+      {showMobileNav && (
+        <div className="lg:hidden sticky top-[73px] w-full bg-white border-b border-gray-100 shadow-lg z-30 animate-in slide-in-from-top duration-200">
+          <div className="px-4 py-4 space-y-3.5 flex flex-col font-bold text-gray-700">
+            <button 
+              onClick={() => {
+                document.getElementById('job-seekers')?.scrollIntoView({ behavior: 'smooth' });
+                setShowMobileNav(false);
+              }}
+              className="text-left py-1 hover:text-gray-900 border-b border-gray-50 pb-2 cursor-pointer"
+            >
+              For Job Seekers
+            </button>
+            <button 
+              onClick={() => {
+                document.getElementById('employers')?.scrollIntoView({ behavior: 'smooth' });
+                setShowMobileNav(false);
+              }}
+              className="text-left py-1 hover:text-gray-900 border-b border-gray-50 pb-2 cursor-pointer"
+            >
+              For Employers
+            </button>
+            <button 
+              onClick={() => {
+                document.getElementById('resources')?.scrollIntoView({ behavior: 'smooth' });
+                setShowMobileNav(false);
+              }}
+              className="text-left py-1 hover:text-gray-900 border-b border-gray-50 pb-2 cursor-pointer"
+            >
+              Resources
+            </button>
+            <button 
+              onClick={() => {
+                document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' });
+                setShowMobileNav(false);
+              }}
+              className="text-left py-1 hover:text-gray-900 border-b border-gray-50 pb-2 cursor-pointer"
+            >
+              About Us
+            </button>
+            
+            {/* Inline Accessibility settings for mobile */}
+            <div className="py-2 space-y-2">
+              <span className="text-xs text-gray-400 font-bold uppercase tracking-wider block">Accessibility Adjustments</span>
+              <div className="flex flex-wrap gap-2 pt-1 font-semibold text-xs">
+                <Button
+                  variant={settings.highContrast ? 'primary' : 'outline'}
+                  size="sm"
+                  onClick={handleContrastToggle}
+                  className="rounded-full"
+                >
+                  Contrast: {settings.highContrast ? 'AAA' : 'Standard'}
+                </Button>
+                <Button
+                  variant={settings.readableFont ? 'primary' : 'outline'}
+                  size="sm"
+                  onClick={handleFontToggle}
+                  className="rounded-full"
+                >
+                  Font: {settings.readableFont ? 'Legible' : 'Standard'}
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={cycleTextSize}
+                  className="rounded-full"
+                >
+                  Size: {settings.textSize.toUpperCase()}
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Hero Section Container */}
       <section className="max-w-7xl mx-auto px-4 py-12 md:px-8 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -471,8 +560,8 @@ export default function LandingPage() {
             <div className="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 shrink-0">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
             </div>
-            <h3 className="font-extrabold text-sm text-gray-800 shrink-0 uppercase tracking-wider">You can filter jobs by the support that matters to you</h3>
-            <div className="h-px bg-gray-100 flex-1" />
+            <h3 className="font-extrabold text-xs sm:text-sm text-gray-800 sm:shrink-0 uppercase tracking-wider">You can filter jobs by the support that matters to you</h3>
+            <div className="h-px bg-gray-100 flex-1 hidden sm:block" />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -671,61 +760,322 @@ export default function LandingPage() {
 
       <section id="resources" className="max-w-7xl mx-auto px-4 py-20 md:px-8 border-t border-gray-100 scroll-mt-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          {/* Left Column */}
           <div className="space-y-6">
             <div className="w-12 h-12 rounded-2xl bg-purple-50 flex items-center justify-center text-[#6200EE]">
               <ShieldCheck className="w-6 h-6" />
             </div>
-            <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight">
-              Work with Confidence & Support
+            
+            <h2 className="text-4xl md:text-5xl font-black text-gray-900 tracking-tight leading-tight">
+              Work with
+              <br />
+              <span className="relative inline-block text-[#6200EE]">
+                Confidence
+                <span className="absolute left-0 bottom-1.5 w-full h-1.5 bg-[#F4B400] rounded-full" />
+              </span>{" "}
+              & Support
             </h2>
+
             <p className="text-gray-600 font-semibold leading-relaxed">
               Access guidelines, templates, and tools designed to align candidates and recruiters. Learn about candidate data privacy, and explore how to request customized adjustments for interviews.
             </p>
-            <ul className="space-y-3 font-semibold text-gray-700">
-              <li className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-purple-600" />
-                Review candidate data privacy protections
-              </li>
-              <li className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-purple-600" />
-                Explore guidelines regarding candidate rights under PH laws
-              </li>
-              <li className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-purple-600" />
-                Utilize pre-configured communication template checklists
-              </li>
-            </ul>
+
+            <div className="space-y-5">
+              {/* Item 1 */}
+              <div className="flex items-start gap-3">
+                <div className="w-9 h-9 rounded-full bg-purple-50 flex items-center justify-center text-[#6200EE] shrink-0 mt-0.5">
+                  <svg className="w-4.5 h-4.5" fill="none" stroke="currentColor" strokeWidth="2.2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                </div>
+                <div>
+                  <h4 className="font-bold text-gray-900 text-sm">Candidate Data Privacy</h4>
+                  <p className="text-xs text-gray-500 font-semibold">Review how we protect personal data and ensure confidentiality.</p>
+                </div>
+              </div>
+              {/* Item 2 */}
+              <div className="flex items-start gap-3">
+                <div className="w-9 h-9 rounded-full bg-purple-50 flex items-center justify-center text-[#6200EE] shrink-0 mt-0.5">
+                  <svg className="w-4.5 h-4.5" fill="none" stroke="currentColor" strokeWidth="2.2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"/></svg>
+                </div>
+                <div>
+                  <h4 className="font-bold text-gray-900 text-sm">Candidate Rights</h4>
+                  <p className="text-xs text-gray-500 font-semibold">Explore guidelines on candidate rights under Philippine laws.</p>
+                </div>
+              </div>
+              {/* Item 3 */}
+              <div className="flex items-start gap-3">
+                <div className="w-9 h-9 rounded-full bg-purple-50 flex items-center justify-center text-[#6200EE] shrink-0 mt-0.5">
+                  <svg className="w-4.5 h-4.5" fill="none" stroke="currentColor" strokeWidth="2.2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                </div>
+                <div>
+                  <h4 className="font-bold text-gray-900 text-sm">Communication Templates</h4>
+                  <p className="text-xs text-gray-500 font-semibold">Use ready-to-go checklists and templates for clear, inclusive communication.</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Banner Block */}
+            <div className="bg-[#FAF8FF] border border-purple-100 p-4 rounded-2xl flex items-center justify-between max-w-lg shadow-sm">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-full bg-[#6200EE] flex items-center justify-center text-white shrink-0">
+                  <svg className="w-4.5 h-4.5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9.663 17h4.673M12 3v1m6.364.364l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 01-2 2h0a2 2 0 01-2-2v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+                </div>
+                <div>
+                  <h4 className="font-extrabold text-xs text-gray-900 leading-tight">Inclusive hiring starts with the right information.</h4>
+                  <p className="text-[10px] text-gray-500 font-semibold mt-0.5">We make it easy to do the right thing, every step of the way.</p>
+                </div>
+              </div>
+              <button 
+                onClick={() => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' })} 
+                className="w-8 h-8 rounded-full bg-white border border-purple-100 flex items-center justify-center text-[#6200EE] hover:bg-[#6200EE] hover:text-white transition-all shadow-sm cursor-pointer"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+              </button>
+            </div>
           </div>
-          <div className="p-6 rounded-3xl border border-gray-100 bg-[#FAFBFD] shadow-sm space-y-4">
-            <h3 className="font-bold text-gray-900 text-sm">Compliance & Privacy</h3>
-            <p className="text-xs text-gray-600 font-semibold leading-relaxed">
-              TrahAbilidad protects PWD candidate privacy and complies with the **Data Privacy Act of 2012**. We do not share medical diagnoses; only requested accommodations are shared with hiring teams to structure interviews.
-            </p>
+
+          {/* Right Column */}
+          <div className="space-y-6">
+            <div className="relative flex justify-center items-center py-6">
+              {/* Dot grid decoration left side */}
+              <div className="absolute left-0 top-0 grid grid-cols-4 gap-1 opacity-20">
+                {Array.from({ length: 16 }).map((_, i) => (
+                  <div key={i} className="w-1.5 h-1.5 rounded-full bg-[#6200EE]" />
+                ))}
+              </div>
+
+              {/* Secure Graphic Illustration */}
+              <svg className="w-full max-w-[420px] h-[240px]" viewBox="0 0 320 200" fill="none">
+                <rect x="40" y="20" width="220" height="150" fill="#fff" rx="12" stroke="#e2e8f0" strokeWidth="1.5" />
+                <rect x="40" y="20" width="220" height="28" fill="#6200EE" rx="12" />
+                <rect x="40" y="38" width="220" height="10" fill="#6200EE" />
+                <circle cx="52" cy="29" r="2.5" fill="#ff5f56" />
+                <circle cx="60" cy="29" r="2.5" fill="#ffbd2e" />
+                <circle cx="68" cy="29" r="2.5" fill="#27c93f" />
+
+                <circle cx="160" cy="68" r="8" fill="#f1f5f9" />
+                <path d="M160 66a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm-4 6a4 4 0 0 1 8 0" stroke="#475569" strokeWidth="1" />
+                <rect x="176" y="64" width="48" height="4" fill="#e2e8f0" rx="1" />
+                <rect x="176" y="70" width="32" height="3" fill="#cbd5e1" rx="1" />
+                <circle cx="236" cy="68" r="6" fill="#dcfce7" />
+                <path d="M233.5 68l1.5 1.5 2.5-3" stroke="#166534" strokeWidth="1.2" strokeLinecap="round" />
+
+                <rect x="154" y="90" width="12" height="12" fill="#f1f5f9" rx="2" />
+                <path d="M157 93h6m-6 3h6" stroke="#475569" strokeWidth="1" />
+                <rect x="176" y="92" width="48" height="4" fill="#e2e8f0" rx="1" />
+                <rect x="176" y="98" width="32" height="3" fill="#cbd5e1" rx="1" />
+                <circle cx="236" cy="96" r="6" fill="#dcfce7" />
+                <path d="M233.5 96l1.5 1.5 2.5-3" stroke="#166534" strokeWidth="1.2" strokeLinecap="round" />
+
+                <rect x="154" y="118" width="12" height="12" fill="#f1f5f9" rx="2" />
+                <path d="M157 122h6m-6 3h3" stroke="#475569" strokeWidth="1" />
+                <rect x="176" y="120" width="48" height="4" fill="#e2e8f0" rx="1" />
+                <rect x="176" y="126" width="32" height="3" fill="#cbd5e1" rx="1" />
+                <circle cx="236" cy="124" r="6" fill="#dcfce7" />
+                <path d="M233.5 124l1.5 1.5 2.5-3" stroke="#166534" strokeWidth="1.2" strokeLinecap="round" />
+
+                <circle cx="95" cy="100" r="30" fill="#f5f3ff" />
+                <path d="M95 79c8.5 0 16 3 16 3v15c0 10-7 16-16 19-9-3-16-9-16-19V82s7.5-3 16-3z" fill="#6200EE" />
+                <path d="M95 91a4 4 0 0 0-4 4v5a4 4 0 0 0 8 0v-5a4 4 0 0 0-4-4zm0 2a2 2 0 0 1 2 2v1h-4v-1a2 2 0 0 1 2-2z" fill="#facc15" />
+                <rect x="91" y="96" width="8" height="7" fill="#facc15" rx="1" />
+                
+                <rect x="12" y="80" width="36" height="50" fill="#fff" rx="6" stroke="#e2e8f0" strokeWidth="1.5" />
+                <rect x="22" y="75" width="16" height="7" fill="#d97706" rx="1.5" />
+                <rect x="17" y="90" width="5" height="5" fill="#f5f3ff" stroke="#6200EE" strokeWidth="1" rx="1" />
+                <path d="M19 92.5l1 1 2-2" stroke="#6200EE" strokeWidth="1" strokeLinecap="round" />
+                <rect x="17" y="102" width="5" height="5" fill="#f5f3ff" stroke="#6200EE" strokeWidth="1" rx="1" />
+                <path d="M19 104.5l1 1 2-2" stroke="#6200EE" strokeWidth="1" strokeLinecap="round" />
+                <rect x="17" y="114" width="5" height="5" fill="#f5f3ff" stroke="#6200EE" strokeWidth="1" rx="1" />
+                <path d="M19 116.5l1 1 2-2" stroke="#6200EE" strokeWidth="1" strokeLinecap="round" />
+
+                <path d="M260 110h-25a4 4 0 0 0-4 4v32a4 4 0 0 0 4 4h36a4 4 0 0 0 4-4v-28a4 4 0 0 0-4-4h-7l-4-4z" fill="#6200EE" />
+                <rect x="244" y="126" width="8" height="6" fill="#fff" rx="1" />
+                <path d="M246 126v-2.5a2 2 0 1 1 4 0V126" stroke="#fff" strokeWidth="1.2" />
+              </svg>
+              
+              {/* Dot grid decoration right side */}
+              <div className="absolute right-0 bottom-4 grid grid-cols-3 gap-1.5 opacity-20">
+                {Array.from({ length: 9 }).map((_, i) => (
+                  <div key={i} className="w-1.5 h-1.5 rounded-full bg-[#6200EE]" />
+                ))}
+              </div>
+            </div>
+
+            {/* Compliance card block */}
+            <div className="bg-white border border-gray-100 rounded-3xl p-6 shadow-sm space-y-4">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-full bg-purple-50 flex items-center justify-center text-[#6200EE] shrink-0">
+                  <ShieldCheck className="w-5 h-5" />
+                </div>
+                <h3 className="font-extrabold text-sm text-gray-900">Compliance & Privacy</h3>
+              </div>
+              <p className="text-xs text-gray-600 font-semibold leading-relaxed">
+                TrahAbilidad protects PWD candidate privacy and complies with the **Data Privacy Act of 2012**. We do not share medical diagnoses; only requested accommodations are shared with hiring teams to structure interviews.
+              </p>
+
+              <div className="grid grid-cols-3 gap-2 pt-4 border-t border-gray-100 mt-4">
+                <div className="flex flex-col items-center text-center p-2 rounded-xl bg-gray-50/50">
+                  <div className="w-7 h-7 rounded-full bg-purple-50 flex items-center justify-center text-[#6200EE] mb-1">
+                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                  </div>
+                  <span className="text-[9px] font-black text-gray-900 leading-tight">Secure by Design</span>
+                  <span className="text-[7px] text-gray-500 mt-0.5 leading-tight font-semibold">Your data is encrypted.</span>
+                </div>
+                <div className="flex flex-col items-center text-center p-2 rounded-xl bg-gray-50/50">
+                  <div className="w-7 h-7 rounded-full bg-purple-50 flex items-center justify-center text-[#6200EE] mb-1">
+                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                  </div>
+                  <span className="text-[9px] font-black text-gray-900 leading-tight">Private & Confidential</span>
+                  <span className="text-[7px] text-gray-500 mt-0.5 leading-tight font-semibold">Only required data shared.</span>
+                </div>
+                <div className="flex flex-col items-center text-center p-2 rounded-xl bg-gray-50/50">
+                  <div className="w-7 h-7 rounded-full bg-purple-50 flex items-center justify-center text-[#6200EE] mb-1">
+                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                  </div>
+                  <span className="text-[9px] font-black text-gray-900 leading-tight">PH Law Compliant</span>
+                  <span className="text-[7px] text-gray-500 mt-0.5 leading-tight font-semibold">Aligned with DPA of 2012.</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
       <section id="about" className="max-w-7xl mx-auto px-4 py-20 md:px-8 border-t border-gray-100 bg-[#FAFBFD]/50 scroll-mt-6 animate-fade-in">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <div className="order-2 lg:order-1 p-6 rounded-3xl border border-gray-100 bg-white shadow-sm space-y-4">
-            <div className="flex items-center gap-2 border-b border-gray-100 pb-2">
-              <span className="text-xs font-bold px-2 py-0.5 bg-primary text-gray-900 rounded">Research Profile</span>
-              <span className="text-xs text-gray-400 font-semibold font-sans">Capstone Thesis</span>
+          {/* Left Column: Thesis research info card */}
+          <div className="p-6 rounded-3xl border border-gray-100 bg-white shadow-sm space-y-5">
+            <div className="flex flex-wrap gap-2.5">
+              <span className="flex items-center gap-1.5 px-3 py-1 bg-purple-50 text-[#6200EE] rounded-lg text-xs font-bold">
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path d="M12 14l9-5-9-5-9 5 9 5z"/><path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/><path strokeLinecap="round" strokeLinejoin="round" d="M18 10.5v4a3 3 0 01-3 3H9a3 3 0 01-3-3v-4"/></svg>
+                Built Through Accessibility Research
+              </span>
+              <span className="px-3 py-1 bg-gray-50 text-gray-500 rounded-lg text-xs font-bold border border-gray-100">
+                Capstone Thesis
+              </span>
             </div>
-            <p className="text-xs text-gray-600 font-semibold leading-relaxed">
-              **TrahAbilidad** (a portmanteau of the Tagalog word *Trabaho* for work and the Spanish-derived *Habilidad* for ability) is a frontend web application prototype developed as a Capstone project. It aims to solve accessibility friction points in online employment search engines for People with Disabilities (PWDs) in the Philippines.
+            
+            <p className="text-sm text-gray-600 font-semibold leading-relaxed">
+              TrahAbilidad (from <span className="text-[#6200EE] font-black">Trabaho + Habilidad</span>) is an accessibility-first employment platform prototype developed as a university research project.
             </p>
+            <p className="text-sm text-gray-600 font-semibold leading-relaxed">
+              It aims to improve how Persons with Disabilities (PWDs) discover job opportunities by making accommodations, communication preferences, and employer support more visible, understandable, and actionable.
+            </p>
+
+            <div className="flex items-start gap-3 p-4 bg-purple-50/40 border border-purple-100 rounded-2xl">
+              <div className="w-9 h-9 rounded-full bg-purple-50 flex items-center justify-center text-[#6200EE] shrink-0">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+              </div>
+              <div className="space-y-0.5">
+                <h4 className="text-xs font-black text-gray-900">Why this research matters</h4>
+                <p className="text-[10px] text-gray-500 font-semibold leading-relaxed">Employment is a key driver of independence and inclusion. This research explores how digital platforms can reduce barriers, promote transparency, and empower PWDs in the workplace.</p>
+              </div>
+            </div>
           </div>
-          <div className="order-1 lg:order-2 space-y-6">
-            <div className="w-12 h-12 rounded-2xl bg-amber-50 flex items-center justify-center text-amber-500">
-              <Info className="w-6 h-6" />
-            </div>
-            <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight">
+
+          {/* Right Column: Copywriting & Pillars */}
+          <div className="space-y-6">
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-amber-50 text-amber-600 rounded-full text-xs font-bold uppercase tracking-wider">
+              <Info className="w-3.5 h-3.5" />
               About the Project
+            </div>
+
+            <h2 className="text-4xl md:text-5xl font-black text-gray-900 tracking-tight leading-tight">
+              Building a More
+              <br />
+              <span className="relative inline-block text-[#6200EE]">
+                Inclusive
+                <span className="absolute left-0 bottom-1.5 w-full h-1.5 bg-[#F4B400] rounded-full" />
+              </span>{" "}
+              Future of Work
             </h2>
+
             <p className="text-gray-600 font-semibold leading-relaxed">
-              Our research focuses on providing fully semantic, highly customizable, and transparent recruitment features that align with Web Content Accessibility Guidelines (WCAG) 2.2 AA standards.
+              Our research focuses on creating semantic, customizable, and transparent recruitment features that align with <span className="text-[#6200EE] font-black">Web Content Accessibility Guidelines (WCAG) 2.2 AA standards.</span>
             </p>
+
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 border-t border-gray-100">
+              <div className="flex flex-col items-center text-center">
+                <div className="w-8 h-8 rounded-full bg-purple-50 flex items-center justify-center text-[#6200EE] mb-2">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path strokeLinecap="round" strokeLinejoin="round" d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10M12 2a15.3 15.3 0 00-4 10 15.3 15.3 0 004 10M2 12h20"/></svg>
+                </div>
+                <span className="text-[10px] font-extrabold text-gray-900 leading-tight">Accessibility First</span>
+              </div>
+              <div className="flex flex-col items-center text-center">
+                <div className="w-8 h-8 rounded-full bg-purple-50 flex items-center justify-center text-[#6200EE] mb-2">
+                  <ShieldCheck className="w-4 h-4" />
+                </div>
+                <span className="text-[10px] font-extrabold text-gray-900 leading-tight">Transparent Recruitment</span>
+              </div>
+              <div className="flex flex-col items-center text-center">
+                <div className="w-8 h-8 rounded-full bg-purple-50 flex items-center justify-center text-[#6200EE] mb-2">
+                  <Users className="w-4 h-4" />
+                </div>
+                <span className="text-[10px] font-extrabold text-gray-900 leading-tight">Inclusive Opportunities</span>
+              </div>
+              <div className="flex flex-col items-center text-center">
+                <div className="w-8 h-8 rounded-full bg-purple-50 flex items-center justify-center text-[#6200EE] mb-2">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"/></svg>
+                </div>
+                <span className="text-[10px] font-extrabold text-gray-900 leading-tight">Equal Access for All</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom Banner Card - Research Highlights */}
+        <div className="bg-[#FEFBF2] border border-amber-100 rounded-3xl p-6 shadow-sm mt-12">
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 items-center">
+            {/* Header */}
+            <div className="lg:col-span-1 border-b lg:border-b-0 lg:border-r border-amber-200/50 pb-4 lg:pb-0 lg:pr-6">
+              <h3 className="font-extrabold text-xs text-[#6200EE] uppercase tracking-wider relative inline-block">
+                Research Highlights
+                <span className="absolute left-0 bottom-[-4px] w-10 h-0.5 bg-[#F4B400]" />
+              </h3>
+            </div>
+            
+            {/* Pillars */}
+            <div className="lg:col-span-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {/* Highlight 1 */}
+              <div className="flex gap-3">
+                <div className="w-9 h-9 rounded-full bg-amber-100 flex items-center justify-center text-amber-600 shrink-0">
+                  <Accessibility className="w-4 h-4" />
+                </div>
+                <div className="space-y-1">
+                  <h4 className="font-extrabold text-xs text-gray-900">WCAG 2.2 AA Aligned</h4>
+                  <p className="text-[9px] text-gray-500 font-semibold leading-relaxed">Built following the latest Web Content Accessibility Guidelines.</p>
+                </div>
+              </div>
+              {/* Highlight 2 */}
+              <div className="flex gap-3">
+                <div className="w-9 h-9 rounded-full bg-purple-100 flex items-center justify-center text-[#6200EE] shrink-0">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                </div>
+                <div className="space-y-1">
+                  <h4 className="font-extrabold text-xs text-gray-900">Compliant & Ethical</h4>
+                  <p className="text-[9px] text-gray-500 font-semibold leading-relaxed">Aligned with Philippine Data Privacy Act of 2012 and RA 7277 (Magna Carta for PWDs).</p>
+                </div>
+              </div>
+              {/* Highlight 3 */}
+              <div className="flex gap-3">
+                <div className="w-9 h-9 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 shrink-0">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                </div>
+                <div className="space-y-1">
+                  <h4 className="font-extrabold text-xs text-gray-900">Privacy by Design</h4>
+                  <p className="text-[9px] text-gray-500 font-semibold leading-relaxed">We protect candidate data and only share necessary information with employers.</p>
+                </div>
+              </div>
+              {/* Highlight 4 */}
+              <div className="flex gap-3">
+                <div className="w-9 h-9 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 shrink-0">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M7 12l3-3 3 3 4-4M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+                </div>
+                <div className="space-y-1">
+                  <h4 className="font-extrabold text-xs text-gray-900">Impact Driven</h4>
+                  <p className="text-[9px] text-gray-500 font-semibold leading-relaxed">Designed to create real opportunities and support inclusive hiring in the PH.</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>

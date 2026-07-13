@@ -86,7 +86,7 @@ export default function SettingsPage() {
               Increases the base HTML root font size which dynamically enlarges all text fields in the application.
             </span>
           </div>
-          <div className="w-full sm:w-48 shrink-0">
+          <div className="w-full sm:w-64 shrink-0">
             <Select
               options={sizeOptions}
               value={settings.textSize}

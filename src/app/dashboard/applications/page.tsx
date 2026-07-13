@@ -112,9 +112,18 @@ export default function ApplicationsPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
 
+  // Accommodations filtering state
+  const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
+  const [selectedAccs, setSelectedAccs] = useState<string[]>([]);
+
   useEffect(() => {
     setApplications(getApplications());
   }, []);
+
+  // Get all unique requested accommodation options
+  const allAccOptions = Array.from(
+    new Set(applications.flatMap(a => a.accommodationsRequested || []))
+  );
 
   // ─── Counts per filter ────────────────────────────────────────────────────
   const counts: Record<FilterStatus, number> = {
@@ -135,6 +144,10 @@ export default function ApplicationsPage() {
       if (activeFilter === 'Decision') return a.status === 'Offered';
       if (activeFilter === 'Withdrawn') return a.status === 'Declined';
       return a.status === activeFilter;
+    })
+    .filter(a => {
+      if (selectedAccs.length === 0) return true;
+      return selectedAccs.every(acc => a.accommodationsRequested.includes(acc));
     })
     .sort((a, b) => {
       const da = new Date(a.appliedDate).getTime();
@@ -173,7 +186,11 @@ export default function ApplicationsPage() {
             ))}
           </div>
           <button
-            className="shrink-0 p-1.5 rounded-lg border border-border-color text-gray-500 hover:text-foreground-color hover:border-gray-300 transition-colors cursor-pointer"
+            onClick={() => setIsFilterModalOpen(true)}
+            className={cn(
+              "shrink-0 p-1.5 rounded-lg border border-border-color text-gray-500 hover:text-foreground-color hover:border-gray-300 transition-colors cursor-pointer",
+              selectedAccs.length > 0 && "border-primary bg-primary/5 text-primary-hover"
+            )}
             aria-label="More filter options"
           >
             <SlidersHorizontal className="w-4 h-4" />
@@ -221,7 +238,7 @@ export default function ApplicationsPage() {
 
                     <div className="flex-1 min-w-0">
                       {/* Title row */}
-                      <div className="flex items-start justify-between gap-3">
+                      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2.5 sm:gap-3">
                         <div className="min-w-0">
                           <h3 className="text-base font-bold text-foreground-color leading-snug">
                             <Link href={`/dashboard/jobs/${app.jobId}`} className="hover:underline hover:text-gray-700 transition-colors">
@@ -243,7 +260,7 @@ export default function ApplicationsPage() {
                         </div>
 
                         {/* Status badge + menu */}
-                        <div className="flex items-center gap-1.5 shrink-0">
+                        <div className="flex items-center gap-1.5 sm:shrink-0 mt-2.5 sm:mt-0">
                           <span className={cn(
                             'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-black border uppercase tracking-wide',
                             statusCfg.classes
@@ -278,7 +295,7 @@ export default function ApplicationsPage() {
 
                 {/* ── Accommodations ── */}
                 <div className="px-5 pb-0 space-y-2 border-t border-border-color pt-4">
-                  <div className="flex items-center justify-between gap-3">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div className="space-y-2 flex-1 min-w-0">
                       <h4 className="text-[10px] font-black uppercase tracking-widest text-gray-400">
                         Requested Accommodations
@@ -305,7 +322,7 @@ export default function ApplicationsPage() {
                     {/* View Details button */}
                     <Link
                       href={`/dashboard/jobs/${app.jobId}`}
-                      className="shrink-0 inline-flex items-center gap-1.5 px-4 py-2 rounded-lg border border-border-color bg-background-color text-sm font-bold text-gray-600 hover:border-gray-400 hover:text-gray-900 hover:bg-gray-50 transition-all"
+                      className="shrink-0 inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg border border-border-color bg-background-color text-sm font-bold text-gray-600 hover:border-gray-400 hover:text-gray-900 hover:bg-gray-50 transition-all w-full sm:w-auto"
                     >
                       View Details
                       <ChevronRight className="w-4 h-4" />
@@ -320,48 +337,54 @@ export default function ApplicationsPage() {
                       Application Progress
                     </h4>
 
-                    <div className="flex items-start w-full">
-                      {STEPS.map((stepLabel, idx) => {
-                        const isCompleted = idx < step;
-                        const isActive = idx === step;
-                        const isPending = idx > step;
-                        return (
-                          <React.Fragment key={stepLabel}>
-                            {/* Step node */}
-                            <div className="flex flex-col items-center gap-1.5 shrink-0 w-[60px]">
-                              <div
-                                className={cn(
-                                  'w-7 h-7 rounded-full flex items-center justify-center text-xs font-black border-2 transition-all',
-                                  isCompleted && 'bg-primary border-primary text-[#212121]',
-                                  isActive && 'bg-primary border-primary text-[#212121] ring-4 ring-primary/20 scale-110',
-                                  isPending && 'bg-white border-gray-300 text-gray-400'
-                                )}
-                              >
-                                {idx + 1}
+                    <div className="overflow-x-auto scrollbar-none pb-1 w-full">
+                      <div className="flex items-start w-full min-w-[300px]">
+                        {STEPS.map((stepLabel, idx) => {
+                          const isCompleted = idx < step;
+                          const isActive = idx === step;
+                          const isPending = idx > step;
+                          return (
+                            <React.Fragment key={stepLabel}>
+                              {/* Step node */}
+                              <div className="flex flex-col items-center gap-1.5 shrink-0 w-[60px]">
+                                <div
+                                  className={cn(
+                                    'w-7 h-7 rounded-full flex items-center justify-center text-xs font-black border-2 transition-all',
+                                    isCompleted && 'bg-primary border-primary text-[#212121]',
+                                    isActive && 'bg-primary border-primary text-[#212121] ring-4 ring-primary/20 scale-110',
+                                    isPending && 'bg-white border-gray-300 text-gray-400'
+                                  )}
+                                >
+                                  {idx + 1}
+                                </div>
+                                <span className={cn(
+                                  'text-[10px] font-black uppercase tracking-wider text-center leading-tight',
+                                  (isCompleted || isActive) ? 'text-foreground-color' : 'text-gray-400'
+                                )}>
+                                  {stepLabel}
+                                </span>
+                                <span className={cn(
+                                  'text-[10px] font-semibold text-center',
+                                  stepDates[idx] ? 'text-gray-500' : 'text-gray-300'
+                                )}>
+                                  {stepDates[idx] ?? '—'}
+                                </span>
                               </div>
-                              <span className={cn(
-                                'text-[10px] font-black uppercase tracking-wider text-center leading-tight',
-                                (isCompleted || isActive) ? 'text-foreground-color' : 'text-gray-400'
-                              )}>
-                                {stepLabel}
-                              </span>
-                              <span className={cn(
-                                'text-[10px] font-semibold text-center',
-                                stepDates[idx] ? 'text-gray-500' : 'text-gray-300'
-                              )}>
-                                {stepDates[idx] ?? '—'}
-                              </span>
-                            </div>
 
-                            {/* Connector line between steps */}
-                            {idx < STEPS.length - 1 && (
-                              <div className="flex-1 h-0.5 mt-[13px] mx-1 rounded-full transition-colors duration-500"
-                                style={{ backgroundColor: idx < step ? 'var(--primary)' : '#e5e7eb' }}
-                              />
-                            )}
-                          </React.Fragment>
-                        );
-                      })}
+                              {/* Connector line between steps */}
+                              {idx < STEPS.length - 1 && (
+                                <div 
+                                  className={cn(
+                                    "flex-1 h-0.5 mt-[13px] mx-1 rounded-full transition-colors duration-500 stepper-connector",
+                                    idx < step ? "completed bg-primary" : "bg-gray-200"
+                                  )}
+                                  style={{ backgroundColor: idx < step ? 'var(--primary)' : '#e5e7eb' }}
+                                />
+                              )}
+                            </React.Fragment>
+                          );
+                        })}
+                      </div>
                     </div>
                   </div>
                 )}
@@ -428,6 +451,107 @@ export default function ApplicationsPage() {
           <div className="flex items-center gap-2 text-sm font-semibold text-gray-500">
             <span>{PAGE_SIZE} per page</span>
             <ChevronDown className="w-3.5 h-3.5" />
+          </div>
+        </div>
+      )}
+
+      {/* ── Accommodations Filter Modal ── */}
+      {isFilterModalOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-end sm:items-center justify-center"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Filter by Accommodations"
+        >
+          {/* Backdrop */}
+          <div
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            onClick={() => setIsFilterModalOpen(false)}
+          />
+
+          {/* Panel */}
+          <div className="relative z-10 w-full sm:max-w-md bg-background-color border border-border-color rounded-t-2xl sm:rounded-2xl shadow-2xl p-6 space-y-5">
+            {/* Header */}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <SlidersHorizontal className="w-5 h-5 text-primary" />
+                <h2 className="text-base font-extrabold text-foreground-color">Filter Applications</h2>
+              </div>
+              <button
+                onClick={() => setIsFilterModalOpen(false)}
+                className="text-gray-400 hover:text-foreground-color transition-colors cursor-pointer text-lg leading-none"
+                aria-label="Close filter panel"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Sort */}
+            <div className="space-y-2">
+              <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">Sort By</p>
+              <div className="flex gap-2">
+                {(['Most Recent', 'Oldest'] as const).map(opt => (
+                  <button
+                    key={opt}
+                    onClick={() => setSortBy(opt)}
+                    className={cn(
+                      'flex-1 py-2 rounded-lg text-sm font-bold border transition-all cursor-pointer',
+                      sortBy === opt
+                        ? 'bg-primary text-[#212121] border-primary'
+                        : 'bg-background-color text-gray-500 border-border-color hover:border-gray-300 hover:text-foreground-color'
+                    )}
+                  >
+                    {opt}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Accommodations */}
+            {allAccOptions.length > 0 && (
+              <div className="space-y-2">
+                <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">Requested Accommodations</p>
+                <div className="flex flex-wrap gap-2">
+                  {allAccOptions.map(acc => {
+                    const active = selectedAccs.includes(acc);
+                    return (
+                      <button
+                        key={acc}
+                        onClick={() =>
+                          setSelectedAccs(prev =>
+                            active ? prev.filter(a => a !== acc) : [...prev, acc]
+                          )
+                        }
+                        className={cn(
+                          'px-3 py-1.5 rounded-full text-xs font-bold border transition-all cursor-pointer',
+                          active
+                            ? 'bg-primary text-[#212121] border-primary'
+                            : 'bg-background-color text-gray-500 border-border-color hover:border-gray-300 hover:text-foreground-color'
+                        )}
+                      >
+                        {acc}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* Actions */}
+            <div className="flex gap-3 pt-1">
+              <button
+                onClick={() => { setSelectedAccs([]); setSortBy('Most Recent'); }}
+                className="flex-1 py-2.5 rounded-xl text-sm font-bold border border-border-color text-gray-500 hover:text-foreground-color hover:border-gray-300 transition-colors cursor-pointer"
+              >
+                Clear All
+              </button>
+              <button
+                onClick={() => setIsFilterModalOpen(false)}
+                className="flex-1 py-2.5 rounded-xl text-sm font-bold bg-primary text-[#212121] hover:opacity-90 transition-opacity cursor-pointer"
+              >
+                Apply{selectedAccs.length > 0 ? ` (${selectedAccs.length})` : ''}
+              </button>
+            </div>
           </div>
         </div>
       )}

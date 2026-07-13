@@ -11,7 +11,7 @@
   --color-surface: var(--surface);
   --color-success-color: var(--success);
   --color-border-color: var(--border);
-  
+
   --font-sans: var(--font-inter), system-ui, -apple-system, sans-serif;
 }
 
@@ -24,7 +24,7 @@
   --surface: #F8F9FA;
   --success: #2E7D32;
   --border: #e4e4e7;
-  
+
   /* Font size scale modifiers */
   --base-font-size: 16px;
   --font-inter: var(--font-inter-family);
@@ -46,6 +46,7 @@ body {
 html.text-size-large {
   --base-font-size: 18px;
 }
+
 html.text-size-xlarge {
   --base-font-size: 21px;
 }
@@ -79,23 +80,220 @@ html.large-touch-targets [role="button"] {
 html.high-contrast {
   --background: #000000 !important;
   --foreground: #ffffff !important;
-  --primary: #ffff00 !important; /* bright yellow contrast */
+  --primary: #ffff00 !important;
+  /* bright yellow contrast */
   --primary-hover: #f3f315 !important;
-  --secondary: #00ffff !important; /* cyan contrast */
+  --secondary: #00ffff !important;
+  /* cyan contrast */
   --surface: #121212 !important;
   --success: #00ff00 !important;
   --border: #ffffff !important;
 }
 
-html.high-contrast body {
+html.high-contrast body,
+html.high-contrast main,
+html.high-contrast header,
+html.high-contrast section,
+html.high-contrast div,
+html.high-contrast article,
+html.high-contrast footer,
+html.high-contrast nav,
+html.high-contrast aside,
+html.high-contrast ul,
+html.high-contrast li {
   background-color: #000000 !important;
+  background: #000000 !important;
+  color: #ffffff !important;
+  border-color: #ffffff !important;
+  box-shadow: none !important;
+}
+
+/* Inline text tags inherit transparent backgrounds so they do not overlay black boxes on hover buttons */
+html.high-contrast p,
+html.high-contrast span,
+html.high-contrast h1,
+html.high-contrast h2,
+html.high-contrast h3,
+html.high-contrast h4,
+html.high-contrast h5,
+html.high-contrast h6,
+html.high-contrast label,
+html.high-contrast strong,
+html.high-contrast b,
+html.high-contrast i,
+html.high-contrast em {
+  background-color: transparent !important;
+  background: transparent !important;
   color: #ffffff !important;
 }
 
 /* High contrast custom element adjustments */
-html.high-contrast a {
+html.high-contrast a,
+html.high-contrast a *,
+html.high-contrast [role="link"],
+html.high-contrast [role="link"] * {
+  text-decoration: none !important;
+  color: #ffffff !important;
+}
+
+/* Underline standard text links in body blocks */
+html.high-contrast p a,
+html.high-contrast p a *,
+html.high-contrast article a,
+html.high-contrast article a * {
   text-decoration: underline !important;
-  color: #00ffff !important;
+}
+
+/* Explicitly strip outlines/underlines from nav elements */
+html.high-contrast nav a,
+html.high-contrast nav a *,
+html.high-contrast nav [role="link"],
+html.high-contrast nav [role="link"] * {
+  text-decoration: none !important;
+}
+
+html.high-contrast a:hover,
+html.high-contrast a:hover *,
+html.high-contrast [role="link"]:hover,
+html.high-contrast [role="link"]:hover * {
+  color: #ffff00 !important;
+  text-decoration: underline !important;
+}
+
+html.high-contrast a:hover svg,
+html.high-contrast [role="link"]:hover svg,
+html.high-contrast button:hover svg {
+  stroke: #ffff00 !important;
+}
+
+html.high-contrast svg {
+  stroke: #ffffff !important;
+  fill: transparent !important;
+}
+
+/* Interactive elements: Styled buttons normally show white borders on black background */
+html.high-contrast button.border,
+html.high-contrast button.bg-primary,
+html.high-contrast .button,
+html.high-contrast [role="button"],
+html.high-contrast a.border,
+html.high-contrast a[class*="border"],
+html.high-contrast a[class*="bg-white"] {
+  background-color: #000000 !important;
+  background: #000000 !important;
+  color: #ffffff !important;
+  border: 2px solid #ffffff !important;
+  text-decoration: none !important;
+}
+
+html.high-contrast button.border *,
+html.high-contrast button.bg-primary *,
+html.high-contrast .button *,
+html.high-contrast [role="button"] *,
+html.high-contrast a.border *,
+html.high-contrast a[class*="border"] *,
+html.high-contrast a[class*="bg-white"] * {
+  color: inherit !important;
+}
+
+/* Plain text buttons (like header nav links) hover to bright yellow with transparent bg */
+html.high-contrast button:not(.border):not(.bg-primary):hover {
+  background-color: transparent !important;
+  background: transparent !important;
+  color: #ffff00 !important;
+  text-decoration: underline !important;
+}
+
+html.high-contrast button:not(.border):not(.bg-primary):hover * {
+  color: #ffff00 !important;
+}
+
+/* Hovering over styled outline buttons: Invert colors to white background and black text/icons */
+html.high-contrast button.border:hover,
+html.high-contrast .button:hover,
+html.high-contrast [role="button"]:hover,
+html.high-contrast a.border:hover,
+html.high-contrast a[class*="border"]:hover,
+html.high-contrast a[class*="bg-white"]:hover {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  color: #000000 !important;
+  border-color: #ffffff !important;
+  text-decoration: none !important;
+}
+
+html.high-contrast button.border:hover *,
+html.high-contrast .button:hover *,
+html.high-contrast [role="button"]:hover *,
+html.high-contrast a.border:hover *,
+html.high-contrast a[class*="border"]:hover *,
+html.high-contrast a[class*="bg-white"]:hover * {
+  color: #000000 !important;
+}
+
+html.high-contrast button.border:hover svg,
+html.high-contrast .button:hover svg,
+html.high-contrast [role="button"]:hover svg,
+html.high-contrast a.border:hover svg,
+html.high-contrast a[class*="border"]:hover svg,
+html.high-contrast a[class*="bg-white"]:hover svg {
+  stroke: #000000 !important;
+}
+
+/* Primary actions: Keep high-contrast yellow background with black text */
+html.high-contrast .bg-primary,
+html.high-contrast button.bg-primary,
+html.high-contrast .peer-checked\:bg-primary:checked+div,
+html.high-contrast [variant="primary"],
+html.high-contrast a[class*="bg-[#F4B400]"],
+html.high-contrast a[class*="bg-primary"] {
+  background-color: #ffff00 !important;
+  background: #ffff00 !important;
+  color: #000000 !important;
+  border-color: #ffff00 !important;
+  text-decoration: none !important;
+}
+
+html.high-contrast .bg-primary *,
+html.high-contrast button.bg-primary *,
+html.high-contrast a[class*="bg-[#F4B400]"] *,
+html.high-contrast a[class*="bg-primary"] * {
+  background-color: transparent !important;
+  background: transparent !important;
+  color: #000000 !important;
+}
+
+html.high-contrast .bg-primary svg,
+html.high-contrast button.bg-primary svg,
+html.high-contrast a[class*="bg-[#F4B400]"] svg,
+html.high-contrast a[class*="bg-primary"] svg {
+  stroke: #000000 !important;
+}
+
+/* Hovering over primary elements: Invert to white background with black text */
+html.high-contrast button.bg-primary:hover,
+html.high-contrast .bg-primary:hover,
+html.high-contrast a[class*="bg-[#F4B400]"]:hover,
+html.high-contrast a[class*="bg-primary"]:hover {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  color: #000000 !important;
+  border-color: #ffffff !important;
+  text-decoration: none !important;
+}
+
+html.high-contrast button.bg-primary:hover *,
+html.high-contrast .bg-primary:hover *,
+html.high-contrast a[class*="bg-[#F4B400]"]:hover *,
+html.high-contrast a[class*="bg-primary"]:hover * {
+  color: #000000 !important;
+}
+
+html.high-contrast button.bg-primary:hover svg,
+html.high-contrast .bg-primary:hover svg,
+html.high-contrast a[class*="bg-[#F4B400]"]:hover svg,
+html.high-contrast a[class*="bg-primary"]:hover svg {
+  stroke: #000000 !important;
 }
 
 html.high-contrast input,
@@ -104,6 +302,80 @@ html.high-contrast textarea {
   background-color: #000000 !important;
   color: #ffffff !important;
   border: 2px solid #ffffff !important;
+}
+
+html.high-contrast .pointer-events-none,
+html.high-contrast .fixed.inset-0 {
+  background-color: transparent !important;
+  background: transparent !important;
+}
+
+/* High contrast overrides for Switch toggle component */
+html.high-contrast button[role="switch"],
+html.high-contrast button[role="switch"].bg-primary {
+  background-color: #000000 !important;
+  background: #000000 !important;
+  border: 2px solid #ffffff !important;
+}
+
+html.high-contrast button[role="switch"] span {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+}
+
+html.high-contrast button[role="switch"][aria-checked="true"] {
+  border-color: #ffff00 !important;
+}
+
+html.high-contrast button[role="switch"][aria-checked="true"] span {
+  background-color: #ffff00 !important;
+  background: #ffff00 !important;
+}
+
+/* High contrast overrides for stepper connectors */
+html.high-contrast .stepper-connector {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+}
+
+html.high-contrast .stepper-connector.completed {
+  background-color: #ffff00 !important;
+  background: #ffff00 !important;
+}
+
+/* High contrast overrides for notification dots */
+html.high-contrast .notification-dot {
+  background-color: #ffff00 !important;
+  background: #ffff00 !important;
+  border: 1px solid #000000 !important;
+}
+
+/* High contrast overrides for merged search bar */
+html.high-contrast .merged-search-bar {
+  border: 2px solid #ffffff !important;
+  background-color: #000000 !important;
+}
+
+html.high-contrast .merged-search-bar input {
+  border: none !important;
+}
+
+html.high-contrast .merged-search-bar .divider {
+  background-color: #ffffff !important;
+}
+
+/* High contrast overrides for brand assets */
+html.high-contrast .brand-logo-bg {
+  background-color: #ffff00 !important;
+  background: #ffff00 !important;
+}
+
+html.high-contrast .brand-logo-bg svg {
+  stroke: #000000 !important;
+}
+
+html.high-contrast .brand-text-highlight {
+  color: #ffff00 !important;
 }
 
 /* Accessible focus styling */
