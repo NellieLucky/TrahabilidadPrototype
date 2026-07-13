@@ -1,0 +1,116 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-secondary: var(--secondary);
+  --color-background-color: var(--background);
+  --color-foreground-color: var(--foreground);
+  --color-surface: var(--surface);
+  --color-success-color: var(--success);
+  --color-border-color: var(--border);
+  
+  --font-sans: var(--font-inter), system-ui, -apple-system, sans-serif;
+}
+
+:root {
+  --background: #ffffff;
+  --foreground: #212121;
+  --primary: #F4B400;
+  --primary-hover: #D9A000;
+  --secondary: #F9A826;
+  --surface: #F8F9FA;
+  --success: #2E7D32;
+  --border: #e4e4e7;
+  
+  /* Font size scale modifiers */
+  --base-font-size: 16px;
+  --font-inter: var(--font-inter-family);
+}
+
+html {
+  font-size: var(--base-font-size);
+  height: 100%;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  min-height: 100%;
+  font-family: var(--font-sans);
+}
+
+/* Typography settings overrides */
+html.text-size-large {
+  --base-font-size: 18px;
+}
+html.text-size-xlarge {
+  --base-font-size: 21px;
+}
+
+/* Legible/readable font overrides */
+html.readable-font {
+  --font-inter-family: Arial, sans-serif;
+}
+
+/* Reduced motion overrides */
+html.reduce-motion,
+html.reduce-motion * {
+  animation-delay: 0s !important;
+  animation-duration: 0.001s !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001s !important;
+  transition-delay: 0s !important;
+  scroll-behavior: auto !important;
+}
+
+/* Custom large touch targets settings */
+html.large-touch-targets button,
+html.large-touch-targets a,
+html.large-touch-targets input,
+html.large-touch-targets select,
+html.large-touch-targets [role="button"] {
+  min-height: 48px !important;
+}
+
+/* High Contrast mode overrides (WCAG AAA Compliance) */
+html.high-contrast {
+  --background: #000000 !important;
+  --foreground: #ffffff !important;
+  --primary: #ffff00 !important; /* bright yellow contrast */
+  --primary-hover: #f3f315 !important;
+  --secondary: #00ffff !important; /* cyan contrast */
+  --surface: #121212 !important;
+  --success: #00ff00 !important;
+  --border: #ffffff !important;
+}
+
+html.high-contrast body {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+}
+
+/* High contrast custom element adjustments */
+html.high-contrast a {
+  text-decoration: underline !important;
+  color: #00ffff !important;
+}
+
+html.high-contrast input,
+html.high-contrast select,
+html.high-contrast textarea {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+  border: 2px solid #ffffff !important;
+}
+
+/* Accessible focus styling */
+*:focus-visible {
+  outline: 4px solid var(--primary) !important;
+  outline-offset: 2px !important;
+}
+
+html.high-contrast *:focus-visible {
+  outline: 4px solid #ffff00 !important;
+  outline-offset: 4px !important;
+}
