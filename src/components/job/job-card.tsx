@@ -50,7 +50,7 @@ export function JobCard({ job, onApplyClick, className }: JobCardProps) {
   return (
     <article
       className={cn(
-        'group relative flex flex-col gap-3.5 p-5 rounded-2xl border border-border-color bg-background-color shadow-sm transition-all duration-300 hover:shadow-md hover:border-primary/40 focus-within:ring-4 focus-within:ring-primary/20',
+        'group relative flex flex-col gap-3.5 p-5 rounded-2xl border border-border-color bg-background-color shadow-sm transition-all duration-300 hover:shadow-md hover:border-gray-300 focus-within:ring-4 focus-within:ring-primary/20',
         className
       )}
     >
@@ -68,7 +68,7 @@ export function JobCard({ job, onApplyClick, className }: JobCardProps) {
             {job.logoInitials}
           </div>
           <div>
-            <h3 className="font-extrabold text-base md:text-lg leading-snug group-hover:text-primary-hover transition-colors">
+            <h3 className="font-extrabold text-base md:text-lg leading-snug group-hover:text-gray-600 transition-colors">
               <Link href={`/dashboard/jobs/${job.id}`} className="focus:outline-none focus:underline">
                 {job.title}
               </Link>
@@ -88,7 +88,7 @@ export function JobCard({ job, onApplyClick, className }: JobCardProps) {
           onClick={handleSaveToggle}
           aria-label={isSaved ? `Unsave ${job.title}` : `Save ${job.title}`}
           className={cn(
-            'p-2 rounded-xl border border-border-color hover:bg-surface text-gray-400 hover:text-primary transition-colors focus-visible:ring-4 focus-visible:ring-primary/50 focus-visible:outline-none cursor-pointer shrink-0',
+            'p-2 rounded-xl border border-border-color hover:bg-surface text-gray-400 hover:text-gray-700 transition-colors focus-visible:ring-4 focus-visible:ring-primary/50 focus-visible:outline-none cursor-pointer shrink-0',
             isSaved && 'text-primary border-primary/20 bg-primary/5'
           )}
         >
@@ -123,7 +123,7 @@ export function JobCard({ job, onApplyClick, className }: JobCardProps) {
       <div className="flex gap-2.5 pt-3 border-t border-border-color/60 mt-auto w-full">
         <Link
           href={`/dashboard/jobs/${job.id}`}
-          className="flex-1 inline-flex items-center justify-center rounded-xl border border-primary hover:bg-primary/5 text-sm font-bold text-primary transition-colors focus-visible:ring-4 focus-visible:ring-primary/50 focus-visible:outline-none h-11"
+          className="flex-1 inline-flex items-center justify-center rounded-xl border border-border-color hover:border-gray-400 hover:bg-gray-50 text-sm font-bold text-gray-600 hover:text-gray-900 transition-colors focus-visible:ring-4 focus-visible:ring-primary/50 focus-visible:outline-none h-11"
         >
           View Details
         </Link>

@@ -117,7 +117,7 @@ export default function JobDetailsPage({ params }: JobDetailsPageProps) {
               onClick={handleSaveToggle}
               aria-label={isSaved ? `Unsave ${job.title}` : `Save ${job.title}`}
               className={cn(
-                'p-2.5 rounded-lg border border-border-color hover:bg-surface text-gray-400 hover:text-primary transition-colors focus-visible:ring-4 focus-visible:ring-primary/50 focus-visible:outline-none cursor-pointer',
+                'p-2.5 rounded-lg border border-border-color hover:bg-surface text-gray-400 hover:text-gray-700 transition-colors focus-visible:ring-4 focus-visible:ring-primary/50 focus-visible:outline-none cursor-pointer',
                 isSaved && 'text-primary border-primary/20 bg-primary/5'
               )}
             >
@@ -134,7 +134,7 @@ export default function JobDetailsPage({ params }: JobDetailsPageProps) {
         </div>
 
         {/* Metadata grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 text-sm font-semibold text-gray-600 dark:text-gray-400 border-t border-border-color">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 text-sm font-semibold text-gray-700 border-t border-border-color">
           <span className="flex items-center gap-1.5">
             <MapPin className="w-4 h-4 text-gray-400" aria-hidden="true" />
             {job.location}
@@ -174,7 +174,7 @@ export default function JobDetailsPage({ params }: JobDetailsPageProps) {
             <h3 id="desc-heading" className="text-lg font-bold text-foreground-color">
               Job Description
             </h3>
-            <p className="text-base text-gray-700 dark:text-gray-300 leading-relaxed font-semibold">
+            <p className="text-base text-gray-700 leading-relaxed font-semibold">
               {job.description}
             </p>
           </section>
@@ -187,7 +187,7 @@ export default function JobDetailsPage({ params }: JobDetailsPageProps) {
             <h3 id="req-heading" className="text-lg font-bold text-foreground-color">
               Key Requirements
             </h3>
-            <ul className="list-disc list-inside space-y-2 text-base text-gray-700 dark:text-gray-300 font-semibold leading-relaxed">
+            <ul className="list-disc list-inside space-y-2 text-base text-gray-700 font-semibold leading-relaxed">
               {job.requirements.map((req) => (
                 <li key={req}>{req}</li>
               ))}
@@ -202,7 +202,7 @@ export default function JobDetailsPage({ params }: JobDetailsPageProps) {
             <h3 id="benefits-heading" className="text-lg font-bold text-foreground-color">
               Compensation & Benefits
             </h3>
-            <ul className="list-disc list-inside space-y-2 text-base text-gray-700 dark:text-gray-300 font-semibold leading-relaxed">
+            <ul className="list-disc list-inside space-y-2 text-base text-gray-700 font-semibold leading-relaxed">
               {job.benefits.map((benefit) => (
                 <li key={benefit}>{benefit}</li>
               ))}
@@ -234,7 +234,7 @@ export default function JobDetailsPage({ params }: JobDetailsPageProps) {
               </h4>
               <ul className="space-y-1.5">
                 {job.accommodations.interview.map((item) => (
-                  <li key={item} className="flex items-start gap-2 text-sm font-semibold text-gray-700 dark:text-gray-300">
+                  <li key={item} className="flex items-start gap-2 text-sm font-semibold text-gray-700">
                     <CheckCircle2 className="w-4 h-4 text-green-600 shrink-0 mt-0.5" aria-hidden="true" />
                     <span>{item}</span>
                   </li>
@@ -250,7 +250,7 @@ export default function JobDetailsPage({ params }: JobDetailsPageProps) {
               </h4>
               <ul className="space-y-1.5">
                 {job.accommodations.documents.map((item) => (
-                  <li key={item} className="flex items-start gap-2 text-sm font-semibold text-gray-700 dark:text-gray-300">
+                  <li key={item} className="flex items-start gap-2 text-sm font-semibold text-gray-700">
                     <CheckCircle2 className="w-4 h-4 text-green-600 shrink-0 mt-0.5" aria-hidden="true" />
                     <span>{item}</span>
                   </li>
@@ -266,7 +266,7 @@ export default function JobDetailsPage({ params }: JobDetailsPageProps) {
               </h4>
               <ul className="space-y-1.5">
                 {job.accommodations.communication.map((item) => (
-                  <li key={item} className="flex items-start gap-2 text-sm font-semibold text-gray-700 dark:text-gray-300">
+                  <li key={item} className="flex items-start gap-2 text-sm font-semibold text-gray-700">
                     <CheckCircle2 className="w-4 h-4 text-green-600 shrink-0 mt-0.5" aria-hidden="true" />
                     <span>{item}</span>
                   </li>
@@ -282,7 +282,7 @@ export default function JobDetailsPage({ params }: JobDetailsPageProps) {
               </h4>
               <ul className="space-y-1.5">
                 {job.accommodations.workplace.map((item) => (
-                  <li key={item} className="flex items-start gap-2 text-sm font-semibold text-gray-700 dark:text-gray-300">
+                  <li key={item} className="flex items-start gap-2 text-sm font-semibold text-gray-700">
                     <CheckCircle2 className="w-4 h-4 text-green-600 shrink-0 mt-0.5" aria-hidden="true" />
                     <span>{item}</span>
                   </li>

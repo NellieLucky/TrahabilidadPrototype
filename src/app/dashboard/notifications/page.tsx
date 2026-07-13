@@ -72,7 +72,7 @@ export default function NotificationsPage() {
         aria-label="Alerts controls"
         className="p-5 rounded-2xl border border-border-color bg-background-color shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4"
       >
-        <p className="text-base text-gray-700 dark:text-gray-300 font-semibold leading-relaxed max-w-xl">
+        <p className="text-base text-gray-700 font-semibold leading-relaxed max-w-xl">
           Track real-time responses from inclusive employers regarding your interview accommodation approvals.
         </p>
         {notifications.some((n) => !n.read) && (
@@ -116,7 +116,7 @@ export default function NotificationsPage() {
                     {n.time}
                   </span>
                 </div>
-                <p className="text-sm font-semibold text-gray-600 dark:text-gray-400 leading-relaxed">
+                <p className="text-sm font-semibold text-gray-600 leading-relaxed">
                   {n.message}
                 </p>
               </div>

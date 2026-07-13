@@ -78,7 +78,7 @@ export default function LandingPage() {
           <h2 className="text-4xl sm:text-5xl md:text-6xl font-black text-foreground-color tracking-tight leading-tight">
             Connecting PWD Talents with <span className="text-primary underline decoration-wavy decoration-2">Accessible</span> Employers.
           </h2>
-          <p className="text-lg text-gray-600 dark:text-gray-400 font-medium leading-relaxed max-w-xl">
+          <p className="text-lg text-gray-600 font-medium leading-relaxed max-w-xl">
             TrahAbilidad is a highly accessible job platform that details recruiting accommodations, screen reader preferences, and workplace accessibility from day one.
           </p>
 
@@ -162,7 +162,7 @@ export default function LandingPage() {
             </div>
           </div>
 
-          <div className="rounded-lg bg-surface p-3 text-xs text-gray-600 dark:text-gray-400 border border-border-color leading-relaxed flex gap-2">
+          <div className="rounded-lg bg-surface p-3 text-xs text-gray-600 border border-border-color leading-relaxed flex gap-2">
             <Shield className="w-4 h-4 text-primary shrink-0" aria-hidden="true" />
             <span>
               Your selections are applied globally instantly and saved locally to remember your setup.

@@ -125,7 +125,7 @@ export default function LoginPage() {
           <div className="text-right">
             <a
               href="#"
-              className="text-xs font-bold text-gray-500 hover:text-primary hover:underline focus:outline-none focus:underline"
+              className="text-xs font-bold text-gray-500 hover:text-gray-700 hover:underline focus:outline-none focus:underline"
               onClick={(e) => {
                 e.preventDefault();
                 toast('Password reset link sent to email.', 'info');

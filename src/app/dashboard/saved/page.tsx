@@ -42,7 +42,7 @@ export default function SavedJobsPage() {
         aria-label="Saved listings overview"
         className="p-5 rounded-2xl border border-border-color bg-background-color shadow-sm space-y-2"
       >
-        <p className="text-base text-gray-700 dark:text-gray-300 font-semibold leading-relaxed">
+        <p className="text-base text-gray-700 font-semibold leading-relaxed">
           Here you will find all the inclusive job postings you have bookmarked. You can review their accommodations details and submit applications from here.
         </p>
       </section>

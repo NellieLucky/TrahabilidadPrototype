@@ -43,7 +43,7 @@ export default function SettingsPage() {
         aria-label="Settings configuration overview"
         className="p-5 rounded-2xl border border-border-color bg-background-color shadow-sm space-y-2"
       >
-        <p className="text-base text-gray-700 dark:text-gray-300 font-semibold leading-relaxed">
+        <p className="text-base text-gray-700 font-semibold leading-relaxed">
           Fine-tune the display parameters to optimize legibility, touch navigation, and screen reader performance. Your selections are applied instantly.
         </p>
       </section>

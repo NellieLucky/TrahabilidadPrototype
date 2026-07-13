@@ -55,7 +55,7 @@ export default function HelpCenterPage() {
         aria-label="FAQ Help tools"
         className="p-5 rounded-2xl border border-border-color bg-background-color shadow-sm space-y-4"
       >
-        <p className="text-base text-gray-700 dark:text-gray-300 font-semibold leading-relaxed">
+        <p className="text-base text-gray-700 font-semibold leading-relaxed">
           Need support? Search our guidelines regarding candidate rights, screen reader configs, and interview accommodation tools.
         </p>
 
@@ -109,7 +109,7 @@ export default function HelpCenterPage() {
                       />
                     </button>
                     {isExpanded && (
-                      <div className="p-4 border-t border-border-color/50 text-sm font-semibold text-gray-600 dark:text-gray-400 leading-relaxed bg-surface/50">
+                      <div className="p-4 border-t border-border-color/50 text-sm font-semibold text-gray-600 leading-relaxed bg-surface/50">
                         {faq.answer}
                       </div>
                     )}
@@ -129,7 +129,7 @@ export default function HelpCenterPage() {
               Direct Assistance
             </h3>
 
-            <div className="space-y-3.5 text-sm font-semibold text-gray-700 dark:text-gray-300">
+            <div className="space-y-3.5 text-sm font-semibold text-gray-700">
               <div className="flex gap-3">
                 <MessageSquare className="w-5 h-5 text-primary shrink-0" aria-hidden="true" />
                 <div>

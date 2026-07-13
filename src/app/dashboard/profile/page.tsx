@@ -104,7 +104,7 @@ export default function ProfilePage() {
         aria-label="Profile explanation"
         className="p-5 rounded-2xl border border-border-color bg-background-color shadow-sm space-y-2"
       >
-        <p className="text-base text-gray-700 dark:text-gray-300 font-semibold leading-relaxed">
+        <p className="text-base text-gray-700 font-semibold leading-relaxed">
           Configure your TrahAbilidad Accessibility Profile. When submitting applications, these values are combined with your resume to help companies accommodate your skills.
         </p>
       </section>

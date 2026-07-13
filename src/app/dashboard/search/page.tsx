@@ -202,7 +202,7 @@ export default function SearchPage() {
             <div className="absolute left-3.5 top-3.5 text-gray-400">
               <MapPin className="w-4 h-4" aria-hidden="true" />
             </div>
-            <div className="absolute right-3.5 top-3 text-gray-400 hover:text-primary cursor-pointer select-none">
+            <div className="absolute right-3.5 top-3 text-gray-400 hover:text-gray-700 cursor-pointer select-none">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-4.5 h-4.5">
                 <circle cx="12" cy="12" r="10"></circle>
                 <circle cx="12" cy="12" r="3"></circle>
@@ -374,7 +374,7 @@ export default function SearchPage() {
                         className="w-4 h-4 text-primary rounded border-gray-300 focus:ring-primary accent-primary"
                         aria-label={filter}
                       />
-                      <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                      <span className="text-sm font-semibold text-gray-700">
                         {filter}
                       </span>
                     </div>

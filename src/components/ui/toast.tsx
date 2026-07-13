@@ -44,7 +44,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
       {children}
       {/* Toast Portal Container */}
       <div
-        className="fixed bottom-5 right-5 z-50 flex flex-col gap-2 max-w-md w-full sm:w-auto"
+        className="fixed top-5 right-5 z-50 flex flex-col gap-2 max-w-md w-full sm:w-auto"
         aria-live="polite"
         role="status"
       >
@@ -57,20 +57,20 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
             };
 
             const stylesMap = {
-              success: 'border-l-4 border-green-600 bg-white dark:bg-[#1a1a1a] shadow-lg',
-              error: 'border-l-4 border-red-600 bg-white dark:bg-[#1a1a1a] shadow-lg',
-              info: 'border-l-4 border-blue-600 bg-white dark:bg-[#1a1a1a] shadow-lg',
+              success: 'border-l-4 border-green-600 bg-white dark:bg-[#1a1a1a] text-gray-900 shadow-lg',
+              error: 'border-l-4 border-red-600 bg-white dark:bg-[#1a1a1a] text-gray-900 shadow-lg',
+              info: 'border-l-4 border-blue-600 bg-white dark:bg-[#1a1a1a] text-gray-900 shadow-lg',
             };
 
             return (
               <motion.div
                 key={t.id}
                 layout
-                initial={isMotionEnabled ? { opacity: 0, y: 20, scale: 0.9 } : { opacity: 1, y: 0 }}
+                initial={isMotionEnabled ? { opacity: 0, y: -20, scale: 0.9 } : { opacity: 1, y: 0 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={isMotionEnabled ? { opacity: 0, y: -20, scale: 0.9 } : { opacity: 0 }}
                 className={cn(
-                  'flex items-start gap-3 p-4 rounded-lg border border-border-color shadow-md text-foreground-color w-full sm:min-w-[320px]',
+                  'flex items-start gap-3 p-4 rounded-lg border border-border-color shadow-md w-full sm:min-w-[320px]',
                   stylesMap[t.type]
                 )}
               >

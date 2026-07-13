@@ -17,7 +17,7 @@ export default function AboutPage() {
             TrahAbilidad Capstone & Research Profile
           </h2>
         </div>
-        <p className="text-base text-gray-700 dark:text-gray-300 leading-relaxed font-semibold">
+        <p className="text-base text-gray-700 leading-relaxed font-semibold">
           TrahAbilidad (a portmanteau of the Tagalog word <em>Trabaho</em> for work and the Spanish-derived <em>Habilidad</em> for ability) is a frontend web application prototype developed as a Capstone/Thesis project. It aims to solve accessibility friction points in online employment search engines for People with Disabilities (PWDs) in the Philippines.
         </p>
       </section>
@@ -33,7 +33,7 @@ export default function AboutPage() {
             <BookOpen className="w-5 h-5 text-primary" aria-hidden="true" />
             Research Contributions
           </h3>
-          <ul className="space-y-2 text-sm font-semibold text-gray-600 dark:text-gray-400 list-disc list-inside leading-relaxed">
+          <ul className="space-y-2 text-sm font-semibold text-gray-700 list-disc list-inside leading-relaxed">
             <li>
               <strong>Accommodations Disclosure Framework:</strong> Making interview requirements transparent before application, removing candidate uncertainty.
             </li>
@@ -55,7 +55,7 @@ export default function AboutPage() {
             <ShieldCheck className="w-5 h-5 text-primary" aria-hidden="true" />
             WCAG 2.2 AA Compliance Checklist
           </h3>
-          <ul className="space-y-2 text-sm font-semibold text-gray-600 dark:text-gray-400 list-disc list-inside leading-relaxed">
+          <ul className="space-y-2 text-sm font-semibold text-gray-700 list-disc list-inside leading-relaxed">
             <li>
               <strong>WCAG 1.4.3 Contrast (Minimum):</strong> Satisfying 4.5:1 ratio, and up to 7:1 (AAA) under High Contrast configurations.
             </li>
