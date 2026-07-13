@@ -44,7 +44,7 @@ function getStatusConfig(status: Application['status']) {
     case 'Declined':
       return { label: 'WITHDRAWN', icon: null, classes: 'bg-gray-50 text-gray-500 border-gray-200' };
     default:
-      return { label: status.toUpperCase(), icon: null, classes: 'bg-gray-50 text-gray-500 border-gray-200' };
+      return { label: (status as string).toUpperCase(), icon: null, classes: 'bg-gray-50 text-gray-500 border-gray-200' };
   }
 }
 
