@@ -90,53 +90,54 @@ export default function JobDetailsPage({ params }: JobDetailsPageProps) {
       {/* Main Job Hero Card */}
       <section
         aria-label="Job title overview"
-        className="p-6 rounded-2xl border border-border-color bg-background-color shadow-sm space-y-4"
+        className="relative p-4 md:p-6 rounded-2xl border border-border-color bg-background-color shadow-sm space-y-4"
       >
-        <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
-          <div className="flex items-start gap-4">
-            <div
-              className={cn(
-                'w-14 h-14 rounded-xl flex items-center justify-center text-white font-black text-xl shadow-inner shrink-0',
-                job.logoColor
-              )}
-              aria-hidden="true"
-            >
-              {job.logoInitials}
-            </div>
-            <div>
-              <h2 className="text-2xl md:text-3xl font-black text-foreground-color tracking-tight leading-snug">
-                {job.title}
-              </h2>
-              <p className="text-base font-bold text-gray-500 mt-0.5">{job.company}</p>
-            </div>
-          </div>
+        {/* Save button — absolute top-right corner */}
+        <button
+          type="button"
+          onClick={handleSaveToggle}
+          aria-label={isSaved ? `Unsave ${job.title}` : `Save ${job.title}`}
+          className={cn(
+            'absolute top-4 right-4 p-2.5 rounded-lg border border-border-color hover:bg-surface text-gray-400 hover:text-gray-700 transition-colors focus-visible:ring-4 focus-visible:ring-primary/50 focus-visible:outline-none cursor-pointer',
+            isSaved && 'text-primary border-primary/20 bg-primary/5'
+          )}
+        >
+          <Bookmark className="w-5 h-5" fill={isSaved ? 'currentColor' : 'none'} aria-hidden="true" />
+        </button>
 
-          <div className="flex gap-2 w-full sm:w-auto">
-            <button
-              type="button"
-              onClick={handleSaveToggle}
-              aria-label={isSaved ? `Unsave ${job.title}` : `Save ${job.title}`}
-              className={cn(
-                'p-2.5 rounded-lg border border-border-color hover:bg-surface text-gray-400 hover:text-gray-700 transition-colors focus-visible:ring-4 focus-visible:ring-primary/50 focus-visible:outline-none cursor-pointer',
-                isSaved && 'text-primary border-primary/20 bg-primary/5'
-              )}
-            >
-              <Bookmark className="w-5 h-5" fill={isSaved ? 'currentColor' : 'none'} aria-hidden="true" />
-            </button>
-            <Button
-              variant="primary"
-              className="flex-1 sm:flex-none font-bold"
-              onClick={() => setIsApplyOpen(true)}
-            >
-              Apply & Request Accommodations
-            </Button>
+        {/* Logo + Title — padded right to clear the bookmark button */}
+        <div className="flex items-start gap-3 md:gap-4 pr-12">
+          <div
+            className={cn(
+              'w-12 h-12 md:w-14 md:h-14 rounded-xl flex items-center justify-center text-white font-black text-lg md:text-xl shadow-inner shrink-0',
+              job.logoColor
+            )}
+            aria-hidden="true"
+          >
+            {job.logoInitials}
+          </div>
+          <div className="min-w-0">
+            <h2 className="text-lg md:text-3xl font-black text-foreground-color tracking-tight leading-snug">
+              {job.title}
+            </h2>
+            <p className="text-sm md:text-base font-bold text-gray-500 mt-0.5">{job.company}</p>
           </div>
         </div>
 
+        {/* Apply button — full width, no competition */}
+        <Button
+          variant="primary"
+          fullWidth
+          className="font-bold text-sm h-11"
+          onClick={() => setIsApplyOpen(true)}
+        >
+          Apply &amp; Request Accommodations
+        </Button>
+
         {/* Metadata grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 text-sm font-semibold text-gray-700 border-t border-border-color">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 md:gap-3 pt-2 text-xs md:text-sm font-semibold text-gray-700 border-t border-border-color">
           <span className="flex items-center gap-1.5">
-            <MapPin className="w-4 h-4 text-gray-400" aria-hidden="true" />
+            <MapPin className="w-4 h-4 text-gray-400 shrink-0" aria-hidden="true" />
             {job.location}
             {job.remote && (
               <span className="ml-1 px-1.5 py-0.5 rounded text-[10px] bg-primary/10 text-primary-hover border border-primary/20 font-bold uppercase">
@@ -145,17 +146,17 @@ export default function JobDetailsPage({ params }: JobDetailsPageProps) {
             )}
           </span>
           <span className="flex items-center gap-1.5">
-            <DollarSign className="w-4 h-4 text-gray-400" aria-hidden="true" />
+            <DollarSign className="w-4 h-4 text-gray-400 shrink-0" aria-hidden="true" />
             {job.salary}
           </span>
           <span className="flex items-center gap-1.5">
-            <Briefcase className="w-4 h-4 text-gray-400" aria-hidden="true" />
+            <Briefcase className="w-4 h-4 text-gray-400 shrink-0" aria-hidden="true" />
             {job.type}
           </span>
         </div>
 
         {/* Accessibility indicators tags */}
-        <div className="flex flex-wrap gap-2 pt-2">
+        <div className="flex flex-wrap gap-2 pt-1">
           {job.accessibilityBadges.map((badge) => (
             <AccessibilityBadge key={badge} label={badge} />
           ))}

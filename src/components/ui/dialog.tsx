@@ -135,18 +135,18 @@ export function Dialog({ isOpen, onClose, title, description, children, classNam
             aria-labelledby="modal-title"
             aria-describedby={description ? "modal-description" : undefined}
             className={cn(
-              'relative w-full max-w-lg overflow-hidden rounded-xl border border-border-color bg-background-color p-6 shadow-2xl z-10 animate-scaleUp',
+              'relative w-full max-w-lg flex flex-col max-h-[90vh] rounded-xl border border-border-color bg-background-color shadow-2xl z-10 animate-scaleUp',
               className
             )}
           >
-            {/* Header */}
-            <div className="flex items-start justify-between gap-4 mb-4">
-              <div>
-                <h2 id="modal-title" className="text-xl font-bold text-foreground-color">
+            {/* Header — fixed, never scrolls */}
+            <div className="flex items-start justify-between gap-4 px-5 pt-5 pb-4 border-b border-border-color shrink-0">
+              <div className="min-w-0">
+                <h2 id="modal-title" className="text-lg font-bold text-foreground-color leading-snug">
                   {title}
                 </h2>
                 {description && (
-                  <p id="modal-description" className="text-sm text-gray-500 mt-1">
+                  <p id="modal-description" className="text-xs text-gray-500 mt-1">
                     {description}
                   </p>
                 )}
@@ -155,14 +155,14 @@ export function Dialog({ isOpen, onClose, title, description, children, classNam
                 type="button"
                 onClick={onClose}
                 aria-label="Close dialog"
-                className="rounded-lg p-1 text-gray-400 hover:bg-surface hover:text-foreground-color transition-colors focus-visible:ring-4 focus-visible:ring-primary/50 focus-visible:outline-none cursor-pointer"
+                className="rounded-lg p-1 text-gray-400 hover:bg-surface hover:text-foreground-color transition-colors focus-visible:ring-4 focus-visible:ring-primary/50 focus-visible:outline-none cursor-pointer shrink-0"
               >
                 <X className="w-5 h-5" aria-hidden="true" />
               </button>
             </div>
 
-            {/* Content */}
-            <div className="text-base text-foreground-color leading-relaxed">
+            {/* Content — scrollable */}
+            <div className="overflow-y-auto flex-1 px-5 py-4 text-base text-foreground-color leading-relaxed">
               {children}
             </div>
           </motion.div>

@@ -109,8 +109,8 @@ export function Navbar() {
       settings.textSize === 'normal'
         ? 'large'
         : settings.textSize === 'large'
-        ? 'extra-large'
-        : 'normal';
+          ? 'extra-large'
+          : 'normal';
     updateSetting('textSize', nextSize);
     toast(`Text scaling updated to: ${nextSize.toUpperCase()}`, 'info');
   };
@@ -130,7 +130,7 @@ export function Navbar() {
   return (
     <>
       <header className="sticky top-0 z-30 flex items-center justify-between border-b border-border-color bg-background-color/85 backdrop-blur-md px-4 py-3 md:px-6 w-full">
-        
+
         {/* MOBILE HEADER VIEW (md:hidden) */}
         <div className="flex md:hidden items-center justify-between w-full">
           <button
@@ -142,7 +142,7 @@ export function Navbar() {
           >
             <Menu className="w-5 h-5" aria-hidden="true" />
           </button>
-          
+
           <div className="flex-1 flex flex-col items-center justify-center text-center select-none px-2">
             <div className="flex items-center gap-1.5">
               <div className="w-6 h-6 rounded-md bg-primary brand-logo-bg flex items-center justify-center text-[#212121]">

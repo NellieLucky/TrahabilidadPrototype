@@ -54,46 +54,44 @@ export function JobCard({ job, onApplyClick, className }: JobCardProps) {
         className
       )}
     >
-      {/* Top Section: Logo, Title, Bookmark */}
-      <div className="flex items-start justify-between gap-4">
-        <div className="flex gap-4">
-          {/* Logo container */}
-          <div
-            className={cn(
-              'w-12 h-12 rounded-xl flex items-center justify-center text-white font-black text-lg shadow-inner shrink-0',
-              job.logoColor
-            )}
-            aria-hidden="true"
-          >
-            {job.logoInitials}
-          </div>
-          <div>
-            <h3 className="font-extrabold text-base md:text-lg leading-snug group-hover:text-gray-600 transition-colors">
-              <Link href={`/dashboard/jobs/${job.id}`} className="focus:outline-none focus:underline">
-                {job.title}
-              </Link>
-            </h3>
-            <p className="text-sm font-bold text-gray-500 mt-0.5 flex items-center gap-1">
-              {job.company}
-              <span title="Verified Employer" className="inline-flex shrink-0">
-                <CheckCircle2 className="w-4 h-4 text-[#F4B400] fill-white dark:fill-transparent shrink-0" />
-              </span>
-            </p>
-          </div>
-        </div>
+      {/* Bookmark — absolute so it never pushes title text */}
+      <button
+        type="button"
+        onClick={handleSaveToggle}
+        aria-label={isSaved ? `Unsave ${job.title}` : `Save ${job.title}`}
+        className={cn(
+          'absolute top-4 right-4 p-2 rounded-xl border border-border-color hover:bg-surface text-gray-400 hover:text-gray-700 transition-colors focus-visible:ring-4 focus-visible:ring-primary/50 focus-visible:outline-none cursor-pointer',
+          isSaved && 'text-primary border-primary/20 bg-primary/5'
+        )}
+      >
+        <Bookmark className="w-4 h-4" fill={isSaved ? 'currentColor' : 'none'} aria-hidden="true" />
+      </button>
 
-        {/* Save/Bookmark */}
-        <button
-          type="button"
-          onClick={handleSaveToggle}
-          aria-label={isSaved ? `Unsave ${job.title}` : `Save ${job.title}`}
+      {/* Top Section: Logo + Title (full width, padded right to clear bookmark) */}
+      <div className="flex gap-3 pr-10">
+        {/* Logo container */}
+        <div
           className={cn(
-            'p-2 rounded-xl border border-border-color hover:bg-surface text-gray-400 hover:text-gray-700 transition-colors focus-visible:ring-4 focus-visible:ring-primary/50 focus-visible:outline-none cursor-pointer shrink-0',
-            isSaved && 'text-primary border-primary/20 bg-primary/5'
+            'w-12 h-12 rounded-xl flex items-center justify-center text-white font-black text-lg shadow-inner shrink-0',
+            job.logoColor
           )}
+          aria-hidden="true"
         >
-          <Bookmark className="w-4.5 h-4.5" fill={isSaved ? 'currentColor' : 'none'} aria-hidden="true" />
-        </button>
+          {job.logoInitials}
+        </div>
+        <div className="min-w-0">
+          <h3 className="font-extrabold text-base leading-snug group-hover:text-gray-600 transition-colors">
+            <Link href={`/dashboard/jobs/${job.id}`} className="focus:outline-none focus:underline">
+              {job.title}
+            </Link>
+          </h3>
+          <p className="text-sm font-bold text-gray-500 mt-0.5 flex items-center gap-1 flex-wrap">
+            <span>{job.company}</span>
+            <span title="Verified Employer" className="inline-flex shrink-0">
+              <CheckCircle2 className="w-4 h-4 text-[#F4B400] fill-white dark:fill-transparent shrink-0" />
+            </span>
+          </p>
+        </div>
       </div>
 
       {/* Meta Specs: Location, Job Type, Salary */}

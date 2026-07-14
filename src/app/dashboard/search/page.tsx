@@ -341,7 +341,7 @@ export default function SearchPage() {
                       <input
                         type="checkbox"
                         checked={isChecked}
-                        onChange={() => {}} // handled by div click
+                        onChange={() => { }} // handled by div click
                         id={`search-check-${filter}`}
                         className="w-4 h-4 text-primary rounded border-gray-300 focus:ring-primary accent-primary"
                         aria-label={filter}
