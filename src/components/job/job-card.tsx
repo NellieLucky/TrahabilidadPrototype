@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Bookmark, MapPin, Briefcase, Banknote, CheckCircle2 } from 'lucide-react';
 import { Job, getSavedJobIds, saveJob, unsaveJob } from '@/lib/db';
 import { AccessibilityBadge } from './accessibility-badge';
+import { SalaryDisplay } from './salary-display';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/toast';
 import { cn } from '@/lib/utils';
@@ -106,7 +107,7 @@ export function JobCard({ job, onApplyClick, className }: JobCardProps) {
         </div>
         <div className="flex items-center gap-1.5">
           <Banknote className="w-4 h-4 text-gray-400 shrink-0" />
-          <span>{job.salary}</span>
+          <SalaryDisplay salary={job.salary} />
         </div>
       </div>
 

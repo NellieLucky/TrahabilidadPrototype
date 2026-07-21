@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
-import { HelpCircle, ChevronDown, MessageSquare, PhoneCall, ShieldCheck } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { HelpCircle, ChevronDown, MessageSquare, PhoneCall, Send, X, Circle } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 
@@ -11,9 +11,57 @@ interface FAQItem {
   category: 'Accommodations' | 'Technical' | 'Rights';
 }
 
+interface ChatMessage {
+  id: number;
+  from: 'user' | 'support';
+  text: string;
+  time: string;
+}
+
+const SUPPORT_RESPONSES = [
+  "Hi there! I'm a TrahAbilidad support agent. How can I assist you today?",
+  "Thank you for reaching out. Could you provide more details so I can help you better?",
+  "I understand. Let me check that for you right away.",
+  "That's a great question! Our accessibility team handles all accommodation requests directly with the employer. You'll receive a confirmation in your notifications once submitted.",
+  "Is there anything else I can help you with today?",
+  "Please feel free to ask any other questions. We're here to make sure your job search experience is fully accessible.",
+];
+
+function getTimestamp() {
+  return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+}
+
 export default function HelpCenterPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
+
+  // Chat state
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [messages, setMessages] = useState<ChatMessage[]>([
+    {
+      id: 0,
+      from: 'support',
+      text: "Hello! Welcome to TrahAbilidad Support. How can I help you today?",
+      time: getTimestamp(),
+    },
+  ]);
+  const [inputText, setInputText] = useState('');
+  const [isTyping, setIsTyping] = useState(false);
+  const [responseIndex, setResponseIndex] = useState(1);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // Auto-scroll to latest message
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages, isTyping]);
+
+  // Focus input when chat opens
+  useEffect(() => {
+    if (isChatOpen) {
+      setTimeout(() => inputRef.current?.focus(), 100);
+    }
+  }, [isChatOpen]);
 
   const faqs: FAQItem[] = [
     {
@@ -46,6 +94,40 @@ export default function HelpCenterPage() {
 
   const toggleExpand = (idx: number) => {
     setExpandedIndex(expandedIndex === idx ? null : idx);
+  };
+
+  const sendMessage = () => {
+    const text = inputText.trim();
+    if (!text) return;
+
+    const userMsg: ChatMessage = {
+      id: Date.now(),
+      from: 'user',
+      text,
+      time: getTimestamp(),
+    };
+
+    setMessages((prev) => [...prev, userMsg]);
+    setInputText('');
+    setIsTyping(true);
+
+    // Simulate support agent typing then responding
+    setTimeout(() => {
+      const reply = SUPPORT_RESPONSES[responseIndex % SUPPORT_RESPONSES.length];
+      const supportMsg: ChatMessage = {
+        id: Date.now() + 1,
+        from: 'support',
+        text: reply,
+        time: getTimestamp(),
+      };
+      setMessages((prev) => [...prev, supportMsg]);
+      setIsTyping(false);
+      setResponseIndex((i) => i + 1);
+    }, 1500);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') sendMessage();
   };
 
   return (
@@ -135,9 +217,13 @@ export default function HelpCenterPage() {
                 <div>
                   <h4 className="font-bold text-foreground-color">Chat Support</h4>
                   <p className="text-xs text-gray-500 mt-0.5">Available Mon-Fri, 9AM-5PM</p>
-                  <a href="#" className="text-xs font-bold text-primary hover:underline block mt-1">
-                    Start live chat &rarr;
-                  </a>
+                  <button
+                    type="button"
+                    onClick={() => setIsChatOpen(true)}
+                    className="text-xs font-bold text-primary hover:underline block mt-1 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 rounded"
+                  >
+                    Start live chat →
+                  </button>
                 </div>
               </div>
 
@@ -146,13 +232,133 @@ export default function HelpCenterPage() {
                 <div>
                   <h4 className="font-bold text-foreground-color">Hotline Assistance</h4>
                   <p className="text-xs text-gray-500 mt-0.5">National PWD Support desk</p>
-                  <p className="text-xs text-foreground-color font-bold mt-1">+63 (2) 8123-4567</p>
+                  <a
+                    href="tel:+6328123456"
+                    className="text-xs text-foreground-color font-bold mt-1 block hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 rounded"
+                  >
+                    +63 (2) 8123-4567
+                  </a>
                 </div>
               </div>
             </div>
           </div>
         </aside>
       </div>
+
+      {/* ── Live Chat Panel ── */}
+      {isChatOpen && (
+        <>
+          {/* Mobile: dark backdrop */}
+          <div
+            className="fixed inset-0 z-40 bg-black/50 sm:hidden"
+            onClick={() => setIsChatOpen(false)}
+            aria-hidden="true"
+          />
+
+          {/* Chat panel: full-screen on mobile, floating widget on desktop */}
+          <div
+            className={cn(
+              'fixed z-50 flex flex-col bg-background-color border border-border-color shadow-2xl overflow-hidden animate-scaleUp',
+              // Mobile: full screen, leave room for bottom nav
+              'inset-x-0 bottom-0 top-0 rounded-none',
+              // Desktop: bottom-right floating widget
+              'sm:inset-auto sm:bottom-4 sm:right-4 sm:top-auto sm:w-96 sm:h-[520px] sm:rounded-2xl'
+            )}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Live chat support"
+          >
+            {/* Chat Header */}
+            <div className="flex items-center justify-between px-4 py-3 bg-primary shrink-0">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-full bg-[#212121] flex items-center justify-center text-primary font-black text-xs">
+                  TA
+                </div>
+                <div>
+                  <p className="text-xs font-extrabold text-[#212121]">TrahAbilidad Support</p>
+                  <span className="flex items-center gap-1 text-[10px] font-semibold text-[#212121]/70">
+                    <Circle className="w-1.5 h-1.5 fill-green-600 text-green-600" aria-hidden="true" />
+                    Online
+                  </span>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsChatOpen(false)}
+                aria-label="Close live chat"
+                className="p-1.5 rounded-lg hover:bg-[#212121]/10 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#212121]/30"
+              >
+                <X className="w-4 h-4 text-[#212121]" aria-hidden="true" />
+              </button>
+            </div>
+
+            {/* Messages */}
+            <div
+              className="flex-1 overflow-y-auto px-4 py-3 space-y-3 bg-surface/30"
+              aria-label="Chat messages"
+              role="log"
+            >
+              {messages.map((msg) => (
+                <div
+                  key={msg.id}
+                  className={cn(
+                    'flex flex-col max-w-[80%] gap-1',
+                    msg.from === 'user' ? 'self-end items-end ml-auto' : 'self-start items-start'
+                  )}
+                >
+                  <div
+                    className={cn(
+                      'px-3 py-2 rounded-2xl text-sm font-semibold leading-snug',
+                      msg.from === 'user'
+                        ? 'bg-primary text-[#212121] rounded-br-sm'
+                        : 'bg-background-color border border-border-color text-foreground-color rounded-bl-sm'
+                    )}
+                  >
+                    {msg.text}
+                  </div>
+                  <span className="text-[10px] text-gray-400 font-semibold">{msg.time}</span>
+                </div>
+              ))}
+
+              {/* Typing indicator */}
+              {isTyping && (
+                <div className="flex items-center gap-1.5 px-3 py-2.5 rounded-2xl rounded-bl-sm bg-background-color border border-border-color w-fit">
+                  <span className="w-1.5 h-1.5 rounded-full bg-gray-400 animate-bounce [animation-delay:0ms]" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-gray-400 animate-bounce [animation-delay:150ms]" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-gray-400 animate-bounce [animation-delay:300ms]" />
+                </div>
+              )}
+
+              <div ref={messagesEndRef} />
+            </div>
+
+            {/* Input — extra bottom padding on mobile for the bottom nav */}
+            <div className="flex items-center gap-2 px-3 py-3 pb-safe border-t border-border-color bg-background-color shrink-0 sm:pb-3">
+              <input
+                ref={inputRef}
+                type="text"
+                value={inputText}
+                onChange={(e) => setInputText(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder="Type a message..."
+                aria-label="Type your message"
+                className="flex-1 text-sm font-semibold bg-surface border border-border-color rounded-xl px-3 py-2.5 text-foreground-color placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
+              />
+              <button
+                type="button"
+                onClick={sendMessage}
+                disabled={!inputText.trim()}
+                aria-label="Send message"
+                className="p-2.5 rounded-xl bg-primary text-[#212121] hover:bg-primary/90 disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+              >
+                <Send className="w-4 h-4" aria-hidden="true" />
+              </button>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }
+
+

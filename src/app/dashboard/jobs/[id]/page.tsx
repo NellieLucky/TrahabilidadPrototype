@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import { mockJobs, Job, getSavedJobIds, saveJob, unsaveJob } from '@/lib/db';
 import { AccessibilityBadge } from '@/components/job/accessibility-badge';
+import { SalaryDisplay } from '@/components/job/salary-display';
 import { Button } from '@/components/ui/button';
 import { ApplicationModal } from '@/components/job/application-modal';
 import { useToast } from '@/components/ui/toast';
@@ -147,7 +148,7 @@ export default function JobDetailsPage({ params }: JobDetailsPageProps) {
           </span>
           <span className="flex items-center gap-1.5">
             <DollarSign className="w-4 h-4 text-gray-400 shrink-0" aria-hidden="true" />
-            {job.salary}
+            <SalaryDisplay salary={job.salary} />
           </span>
           <span className="flex items-center gap-1.5">
             <Briefcase className="w-4 h-4 text-gray-400 shrink-0" aria-hidden="true" />
